@@ -35,7 +35,7 @@ jobs:
       env:
         NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
         NETLIFY_SITE_ID: ${{ secrets.DEV_NETLIFY_SITE_ID }}
-        REACT_APP_API_URL: ${{ secret.REACT_APP_API_URL }}
+        REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
       with:
         args: deploy --dir=build --prod
         secrets: '["NETLIFY_AUTH_TOKEN", "NETLIFY_SITE_ID", "REACT_APP_API_URL"]'
