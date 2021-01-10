@@ -67,14 +67,6 @@ const LogIn = (): JSX.Element => {
           </button>
         </Link>
       </form>
-      <button
-        onClick={() => {
-          throw new Error('something wen wrong');
-        }}
-      >
-        Break the world
-      </button>
-      ;
     </Container>
   );
 };
