@@ -25,7 +25,7 @@ describe('Form', () => {
 
       expect(getByText('Адресс обязателен к заполнению')).toBeInTheDocument();
     });
-    it('validates that address is too long ', async () => {
+    it('validates that address is too long', async () => {
       const { getByText, getByTestId } = render(<Form formSubmit={() => undefined} />);
 
       fireEvent.input(getByTestId('address'), {
@@ -41,7 +41,7 @@ describe('Form', () => {
 
       expect(getByText('Слишком длинный адресс')).toBeInTheDocument();
     });
-    it('validates that address is too short ', async () => {
+    it('validates that address is too short', async () => {
       const { getByText, getByTestId } = render(<Form formSubmit={() => undefined} />);
 
       fireEvent.input(getByTestId('address'), {
@@ -149,7 +149,7 @@ describe('Form', () => {
     it('breaks the card number into groups of four digits', async () => {
       const { getByTestId } = render(<Form formSubmit={() => undefined} />);
 
-      const ccInput = getByTestId('card-number');
+      const ccInput = getByTestId('card-number') as HTMLInputElement;
       fireEvent.input(ccInput, { target: { value: '1234123412341234' } });
 
       expect(ccInput.value).toEqual('1234 1234 1234 1234');
@@ -158,7 +158,7 @@ describe('Form', () => {
     it('limits the card number by 19 digits', async () => {
       const { getByTestId } = render(<Form formSubmit={() => undefined} />);
 
-      const ccInput = getByTestId('card-number');
+      const ccInput = getByTestId('card-number') as HTMLInputElement;
       fireEvent.input(ccInput, { target: { value: '12341234123412341234' } });
 
       expect(ccInput.value).toEqual('1234 1234 1234 1234');
