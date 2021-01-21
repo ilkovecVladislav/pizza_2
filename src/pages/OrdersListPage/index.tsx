@@ -5,11 +5,9 @@ import { useLocation, useHistory } from 'react-router-dom';
 
 import Content from './Content';
 
-const Wrapper = styled.div``;
-
 const Button = styled.button`
   display: block;
-  margin 15px auto;
+  margin: 15px auto;
   border: unset;
   background: #00a896;
   border-radius: 16px;
@@ -35,11 +33,11 @@ const OrdersList = (): JSX.Element => {
   }
 
   return (
-    <Wrapper>
+    <div>
       <Button onClick={() => loginWithRedirect({ redirectUri: window.location.href })}>
         Авторизоваться
       </Button>
-    </Wrapper>
+    </div>
   );
 };
 

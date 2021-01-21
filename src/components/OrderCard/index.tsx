@@ -42,8 +42,6 @@ const Top = styled.div`
     &:after {
       content: '';
       position: absolute;
-      top: 0;
-      right: 0;
       width: 2px;
       height: 2px;
       border-radius: 50%;
@@ -59,14 +57,14 @@ const PizzaDescription = styled.div`
     font-weight: 500;
     font-size: 16px;
     line-height: 20px;
-    color: #1F1F33;
+    color: #1f1f33;
     margin-bottom: 8px;
   }
 
   .ingredients {
     margin-bottom: 13px;
     padding-bottom: 8px;
-    border-bottom: 1px dashed #E1E1ED;
+    border-bottom: 1px dashed #e1e1ed;
   }
 
   .ingredient {
@@ -74,7 +72,7 @@ const PizzaDescription = styled.div`
     margin-right: 10px;
     font-size: 12px;
     line-height: 18px;
-    color: #4B4B7C;
+    color: #4b4b7c;
 
     &::after {
       content: '';
@@ -94,6 +92,7 @@ const PizzaDescription = styled.div`
     &:last-child::after {
       background: none;
     }
+  }
 `;
 
 const Bottom = styled.div`
