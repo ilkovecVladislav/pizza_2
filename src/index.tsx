@@ -4,10 +4,12 @@ import { Provider } from 'react-redux';
 import * as Sentry from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
 import { Auth0Provider } from '@auth0/auth0-react';
+import { ThemeProvider } from 'styled-components';
 
 import store from 'store';
 import AppRouter from 'routers';
 import './index.css';
+import theme from 'theme';
 
 Sentry.init({
   dsn: 'https://2a79de97b9bb43d2a2aad9bc8f64f8fe@o502735.ingest.sentry.io/5585386',
@@ -28,7 +30,9 @@ ReactDOM.render(
       redirectUri={window.location.origin}
     >
       <Provider store={store}>
-        <AppRouter />
+        <ThemeProvider theme={theme}>
+          <AppRouter />
+        </ThemeProvider>
       </Provider>
     </Auth0Provider>
   </React.StrictMode>,
