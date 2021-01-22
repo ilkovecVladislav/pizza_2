@@ -24,6 +24,7 @@ const Radio = styled.label`
   font-size: 14px;
   line-height: 20px;
   display: block;
+  cursor: pointer;
 
   input {
     width: 1px;
