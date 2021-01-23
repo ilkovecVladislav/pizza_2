@@ -4,101 +4,29 @@ import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import map from 'lodash/map';
 import reduce from 'lodash/reduce';
-import styled from 'styled-components';
 
 import RadioButtonGroupField from 'components/Form/RadioButtonGroupField';
 import IngredientCheckbox from 'components/Form/IngredientCheckbox';
 import { loadIngredients, setPizza } from './state/reducer';
 import { useIngredients, useIsIngredientsLoading } from './state/selectors';
+import {
+  Container,
+  Content,
+  PizzaName,
+  PizzaParamsWrapper,
+  SauceWrapper,
+  Row,
+  IngredientsLabel,
+  IngredientsItemsContainer,
+  SubmitContainer,
+  SubmitButton,
+} from './PizzaConstructor.style';
 import Header from './Header';
-import Pizza from './Pizza';
+import PizzaView from './PizzaView';
 import PizzaDescription from './PizzaDescription';
 import { PIZZA_SIZES, DOUGH } from './constants';
 import useCalculatePizzaPrice from './priceCalcHooks';
 import type { FormValues } from './types';
-
-const Container = styled.div`
-  background: #fff;
-  height: 100%;
-  overflow-x: auto;
-  max-width: 400px;
-  display: flex;
-  flex-direction: column;
-  margin: 0 auto;
-  position: relative;
-`;
-
-const Content = styled.div`
-  padding: 0 16px 54px;
-`;
-
-const PizzaName = styled.h4`
-  font-weight: 500;
-  font-size: 20px;
-  line-height: 28px;
-  color: #1f1f33;
-  margin-bottom: 4px;
-`;
-
-const PizzaParamsWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 24px;
-`;
-
-const SauceWrapper = styled.div`
-  margin-bottom: 24px;
-`;
-
-const Row = styled.div`
-  & > .label {
-    display: block;
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 20px;
-    margin-bottom: 10px;
-    color: #4b4b7c;
-  }
-
-  .items {
-    display: flex;
-    overflow-y: auto;
-    padding-bottom: 24px;
-
-    & > div {
-      margin-right: 8px;
-    }
-    & > div:last-child {
-      margin-right: 0;
-    }
-  }
-`;
-
-const SubmitWrapper = styled.div`
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #ffffff;
-  box-shadow: 0px -16px 32px rgba(75, 75, 124, 0.05), 0px 0px 4px rgba(75, 75, 124, 0.1);
-  padding: 12px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  .submit {
-    padding: 12px 16px;
-    height: 40px;
-    width: 328px;
-    background: #00a896;
-    border-radius: 16px;
-    border: none;
-    font-weight: 800;
-    font-size: 16px;
-    line-height: 16px;
-    color: #ffffff;
-  }
-`;
 
 const PizzaConstructor = (): JSX.Element => {
   const history = useHistory();
@@ -108,7 +36,7 @@ const PizzaConstructor = (): JSX.Element => {
     dispatch(loadIngredients());
   }, [dispatch]);
 
-  const { register, handleSubmit, watch } = useForm<FormValues>({
+  const { register, handleSubmit, watch, setValue } = useForm<FormValues>({
     defaultValues: {
       size: 'medium',
       dough: 'thin',
@@ -152,7 +80,7 @@ const PizzaConstructor = (): JSX.Element => {
   return (
     <Container>
       <Header />
-      <Pizza data={formValues} />
+      <PizzaView data={formValues} />
       <Content>
         <PizzaName>Pepperoni</PizzaName>
         <PizzaDescription data={formValues} />
@@ -175,44 +103,57 @@ const PizzaConstructor = (): JSX.Element => {
             />
           </SauceWrapper>
           <Row>
-            <span className="label">Добавьте сыр</span>
-            <div className="items">
+            <IngredientsLabel>Добавьте сыр</IngredientsLabel>
+            <IngredientsItemsContainer>
               {map(cheese, (option) => (
-                <IngredientCheckbox key={option.id} name="cheese" option={option} ref={register} />
+                <IngredientCheckbox
+                  key={option.id}
+                  ref={register}
+                  name="cheese"
+                  option={option}
+                  value={formValues.cheese}
+                  setValue={setValue}
+                />
               ))}
-              {map(cheese, (option) => (
-                <IngredientCheckbox key={option.id} name="cheese" option={option} ref={register} />
-              ))}
-            </div>
+            </IngredientsItemsContainer>
           </Row>
           <Row>
-            <span className="label">Добавьте овощи</span>
-            <div className="items">
+            <IngredientsLabel>Добавьте овощи</IngredientsLabel>
+            <IngredientsItemsContainer>
               {map(vegetables, (option) => (
                 <IngredientCheckbox
                   key={option.id}
+                  ref={register}
                   name="vegetables"
                   option={option}
-                  ref={register}
+                  value={formValues.vegetables}
+                  setValue={setValue}
                 />
               ))}
-            </div>
+            </IngredientsItemsContainer>
           </Row>
           <Row>
-            <span className="label">Добавьте мясо</span>
-            <div className="items">
+            <IngredientsLabel>Добавьте мясо</IngredientsLabel>
+            <IngredientsItemsContainer>
               {map(meat, (option) => (
-                <IngredientCheckbox key={option.id} name="meat" option={option} ref={register} />
+                <IngredientCheckbox
+                  key={option.id}
+                  ref={register}
+                  name="meat"
+                  option={option}
+                  value={formValues.meat}
+                  setValue={setValue}
+                />
               ))}
-            </div>
+            </IngredientsItemsContainer>
           </Row>
         </form>
       </Content>
-      <SubmitWrapper>
-        <button className="submit" type="button" onClick={handleOrderClick}>
+      <SubmitContainer>
+        <SubmitButton className="submit" type="button" onClick={handleOrderClick}>
           Заказать за {price} руб
-        </button>
-      </SubmitWrapper>
+        </SubmitButton>
+      </SubmitContainer>
     </Container>
   );
 };

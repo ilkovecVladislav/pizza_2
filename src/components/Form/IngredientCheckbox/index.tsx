@@ -1,17 +1,20 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, ReactElement } from 'react';
 import styled from 'styled-components';
 
 import checkedIcon from 'assets/icons/checked.svg';
 import type Ingredient from 'services/types/Ingredient';
 
-const Container = styled.div`
-  padding: 8px 12px;
+const Container = styled.div<{ isSelected: boolean }>`
+  margin-top: 10px;
+  padding: 0 12px 8px;
   width: 104px;
   height: 130px;
   background: #ffffff;
   box-shadow: 0px 8px 16px rgba(75, 75, 124, 0.05);
   border-radius: 12px;
   flex: none;
+  border: 2px solid ${({ isSelected }) => (isSelected ? '#00a896' : 'transparent')};
+  cursor: pointer;
 
   .thumb {
     display: block;
@@ -20,7 +23,8 @@ const Container = styled.div`
     height: 100%;
     max-width: 64px;
     max-height: 64px;
-    margin-bottom: 8px;
+    position: relative;
+    top: -8px;
   }
 
   .label {
@@ -28,6 +32,8 @@ const Container = styled.div`
     line-height: 20px;
     color: #1f1f33;
     margin-bottom: 8px;
+    display: block;
+    font-weight: ${({ isSelected }) => (isSelected ? 500 : 400)};
   }
 
   .price {
@@ -45,6 +51,7 @@ const Container = styled.div`
 
 const Checkbox = styled.label`
   display: block;
+  cursor: pointer;
 
   input {
     width: 1px;
@@ -85,26 +92,47 @@ const Checkbox = styled.label`
 type Props = {
   name: string;
   option: Ingredient;
+  value: string[];
+  setValue: (name: string, value: string[]) => void;
 };
 
 const IngredientCheckbox = forwardRef<HTMLInputElement, Props>(
-  ({ name, option }, ref): JSX.Element => (
-    <Container>
-      <img
-        className="thumb"
-        src={`${process.env.REACT_APP_API_URL}/${option.thumbnail}`}
-        alt={option.name}
-      />
-      <span className="label">{option.name}</span>
-      <div className="row">
-        <span className="price">{option.price} ₽</span>
-        <Checkbox>
-          <input ref={ref} type="checkbox" name={name} value={option.slug} />
-          <span className="checkbox" />
-        </Checkbox>
-      </div>
-    </Container>
-  ),
+  ({ name, option, value, setValue }, ref): ReactElement => {
+    const isSelected = value.includes(option.slug);
+
+    const handleContainerClick = () => {
+      if (isSelected) {
+        setValue(
+          name,
+          value.filter((item) => item !== option.slug),
+        );
+      } else {
+        setValue(name, [...value, option.slug]);
+      }
+    };
+
+    const handleCheckboxClick = (event: React.MouseEvent) => {
+      event.stopPropagation();
+    };
+
+    return (
+      <Container isSelected={isSelected} onClick={handleContainerClick}>
+        <img
+          className="thumb"
+          src={`${process.env.REACT_APP_API_URL}/${option.thumbnail}`}
+          alt={option.name}
+        />
+        <span className="label">{option.name}</span>
+        <div className="row">
+          <span className="price">{option.price} ₽</span>
+          <Checkbox onClick={handleCheckboxClick}>
+            <input ref={ref} type="checkbox" name={name} value={option.slug} />
+            <span className="checkbox" />
+          </Checkbox>
+        </div>
+      </Container>
+    );
+  },
 );
 
 export default IngredientCheckbox;

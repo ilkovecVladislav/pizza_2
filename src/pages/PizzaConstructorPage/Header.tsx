@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import styled from 'styled-components';
 
 import userIcon from 'assets/icons/user.svg';
@@ -13,7 +13,7 @@ const Container = styled.div`
   flex: none;
 `;
 
-const Header = (): JSX.Element => (
+const Header = (): ReactElement => (
   <Container>
     <img src={logo} alt="логотип" />
     <img src={userIcon} alt="аватар" />
