@@ -1,4 +1,3 @@
-import React, { forwardRef, ReactElement } from 'react';
 import styled from 'styled-components';
 
 import checkedIcon from 'assets/icons/checked.svg';
