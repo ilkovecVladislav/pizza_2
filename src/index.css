@@ -89,4 +89,10 @@ body {
   background-color: #fff;
   min-width: 320px;
   font-family: 'M PLUS Rounded 1c', sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+#root {
+  flex-grow: 1;
 }
