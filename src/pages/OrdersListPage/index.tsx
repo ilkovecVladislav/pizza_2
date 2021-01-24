@@ -1,15 +1,21 @@
 import React from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import styled from 'styled-components';
-import { useLocation, useHistory } from 'react-router-dom';
 
 import Content from './Content';
 
+export const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+`;
+
 const Button = styled.button`
   display: block;
-  margin: 15px auto;
   border: unset;
-  background: #00a896;
+  background: ${({ theme }) => theme.colors.primary.main};
   border-radius: 16px;
   font-weight: 800;
   font-size: 16px;
@@ -23,21 +29,17 @@ const Button = styled.button`
 
 const OrdersList = (): JSX.Element => {
   const { loginWithRedirect, isAuthenticated } = useAuth0();
-  const x = useLocation();
-  const y = useHistory();
-
-  console.log(x, y);
 
   if (isAuthenticated) {
     return <Content />;
   }
 
   return (
-    <div>
+    <Wrapper>
       <Button onClick={() => loginWithRedirect({ redirectUri: window.location.href })}>
         Авторизоваться
       </Button>
-    </div>
+    </Wrapper>
   );
 };
 

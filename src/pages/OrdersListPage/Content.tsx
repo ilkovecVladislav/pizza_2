@@ -9,6 +9,12 @@ import type Order from 'services/types/Order';
 import type Ingredient from 'services/types/Ingredient';
 import OrderCard from 'components/OrderCard';
 
+const Wrapper = styled.div`
+  max-width: 400px;
+  margin: 0 auto;
+  background: ${({ theme }) => theme.colors.gray[100]};
+`;
+
 const Header = styled.div`
   height: 56px;
   display: flex;
@@ -22,7 +28,7 @@ const Header = styled.div`
     font-weight: 800;
     font-size: 20px;
     line-height: 28px;
-    color: #1f1f33;
+    color: ${({ theme }) => theme.colors.primary.text};
   }
 
   button {
@@ -96,7 +102,7 @@ const OrdersList = (): JSX.Element => {
   }
 
   return (
-    <div>
+    <Wrapper>
       <Header>
         <Link to="/home">
           <button type="button" />
@@ -116,7 +122,7 @@ const OrdersList = (): JSX.Element => {
           ))}
         </Container>
       )}
-    </div>
+    </Wrapper>
   );
 };
 

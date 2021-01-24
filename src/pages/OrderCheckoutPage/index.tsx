@@ -12,7 +12,7 @@ import { useIngredients, usePizzaData } from '../PizzaConstructorPage/state/sele
 const Container = styled.div`
   max-width: 400px;
   margin: 0 auto;
-  background: #f8f8fa;
+  background: ${({ theme }) => theme.colors.gray[100]};
 `;
 
 const OrderCheckout = (): ReactElement => {
