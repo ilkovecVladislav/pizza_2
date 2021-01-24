@@ -14,18 +14,18 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
 
-  .success-text {
+  h3 {
     font-weight: 500;
     font-size: 20px;
     line-height: 28px;
-    color: #1f1f33;
+    color: ${({ theme }) => theme.colors.primary.text};
     margin-bottom: 8px;
   }
 
-  .success-description {
+  p {
     font-size: 16px;
     line-height: 20px;
-    color: #4b4b7c;
+    color: ${({ theme }) => theme.colors.gray[600]};
     margin-bottom: 32px;
     text-align: center;
   }
@@ -34,7 +34,7 @@ const Container = styled.div`
 const Success = styled.div`
   width: 67px;
   height: 67px;
-  background: #00a896;
+  background: ${({ theme }) => theme.colors.primary.main};
   border-radius: 99px;
   position: relative;
   margin-bottom: 24px;
@@ -76,8 +76,8 @@ const SuccessVariant = (): JSX.Element => {
   return (
     <Container>
       <Success />
-      <h3 className="success-text">Спасибо за заказ!</h3>
-      <p className="success-description">Заказ успешно оплачен, ждите вашу пиццу уже через час</p>
+      <h3>Спасибо за заказ!</h3>
+      <p>Заказ успешно оплачен, ждите вашу пиццу уже через час</p>
       {order && (
         <OrderCard
           order={order}

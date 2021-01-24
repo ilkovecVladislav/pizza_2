@@ -9,18 +9,18 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
 
-  .text {
+  h3 {
     font-weight: 500;
     font-size: 20px;
     line-height: 28px;
-    color: #1f1f33;
+    color: ${({ theme }) => theme.colors.primary.text};
     margin-bottom: 8px;
   }
 
-  .description {
+  p {
     font-size: 16px;
     line-height: 20px;
-    color: #4b4b7c;
+    color: ${({ theme }) => theme.colors.gray[600]};
     margin-bottom: 32px;
     text-align: center;
   }
@@ -31,7 +31,7 @@ const Container = styled.div`
   button {
     width: 100%;
     border: none;
-    background: #00a896;
+    background: ${({ theme }) => theme.colors.primary.main};
     border-radius: 16px;
     height: 40px;
     padding: 12px 16px;
@@ -45,7 +45,7 @@ const Container = styled.div`
 const Error = styled.div`
   width: 67px;
   height: 67px;
-  background: #e3170a;
+  background: ${({ theme }) => theme.colors.primary.errorText};
   border-radius: 99px;
   position: relative;
   margin-bottom: 24px;
@@ -67,8 +67,8 @@ const Error = styled.div`
 const FailedVariant = (): JSX.Element => (
   <Container>
     <Error />
-    <h3 className="text">Оплата не прошла</h3>
-    <p className="description">Попробуйте еще раз или используйте другую карту</p>
+    <h3>Оплата не прошла</h3>
+    <p>Попробуйте еще раз или используйте другую карту</p>
 
     <Link to="/order-checkout">
       <button type="button">Попробовать еще раз</button>

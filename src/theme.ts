@@ -6,6 +6,7 @@ const theme: DefaultTheme = {
       main: '#00A896',
       dark: '#009485',
       text: '#1F1F33',
+      errorText: '#E3170A',
     },
     secondary: {
       main: '#F3752B',

@@ -13,7 +13,7 @@ type PizzaConstructorState = {
 
 const initialState: PizzaConstructorState = {
   pizza: {
-    size: 'medium',
+    size: '30',
     dough: 'thin',
     cheese: [],
     vegetables: [],

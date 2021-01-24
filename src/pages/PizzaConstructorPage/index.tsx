@@ -38,7 +38,7 @@ const PizzaConstructor = (): JSX.Element => {
 
   const { register, handleSubmit, watch, setValue } = useForm<FormValues>({
     defaultValues: {
-      size: 'medium',
+      size: '30',
       dough: 'thin',
       cheese: [],
       vegetables: [],
