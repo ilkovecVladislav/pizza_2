@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import * as Sentry from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
+import { Auth0Provider } from '@auth0/auth0-react';
 
 import store from 'store';
 import AppRouter from 'routers';
@@ -21,9 +22,15 @@ Sentry.init({
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <AppRouter />
-    </Provider>
+    <Auth0Provider
+      domain="dev-fbesr013.us.auth0.com"
+      clientId="ybZ8MkMu50RRzw1MNPJ5nfNl8ekRUwby"
+      redirectUri={window.location.origin}
+    >
+      <Provider store={store}>
+        <AppRouter />
+      </Provider>
+    </Auth0Provider>
   </React.StrictMode>,
   document.getElementById('root'),
 );

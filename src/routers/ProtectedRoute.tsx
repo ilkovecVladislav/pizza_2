@@ -1,16 +1,15 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
-
-import { useIsAuthorized } from 'pages/Auth/state/selector';
+import { useAuth0 } from '@auth0/auth0-react';
 
 type Props = {
   path: string;
 };
 
-const ProtectedRoute: React.FC<Props> = ({ path, children }) => {
-  const isAuthorized = useIsAuthorized();
+const ProtectedRoute: React.FC<Props> = ({ path, ...routerProps }) => {
+  const { isAuthenticated } = useAuth0();
 
-  return <Route path={path} render={() => (isAuthorized ? children : <Redirect to="/" />)} exact />;
+  return isAuthenticated ? <Route path={path} {...routerProps} exact /> : <Redirect to="/" />;
 };
 
 export default ProtectedRoute;

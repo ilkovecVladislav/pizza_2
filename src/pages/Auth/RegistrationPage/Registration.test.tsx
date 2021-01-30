@@ -34,7 +34,7 @@ describe('Registration', () => {
 
       expect(getByText('Email обязательное поле')).toBeInTheDocument();
     });
-    it('validates that email is valid ', async () => {
+    it('validates that email is valid', async () => {
       const history = createMemoryHistory();
       const { getByText, getByLabelText } = render(
         <Router history={history}>

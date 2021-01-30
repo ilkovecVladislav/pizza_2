@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { FC, ReactElement } from 'react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { render, fireEvent } from '@testing-library/react';
 import App from '.';
 
-const renderWithRouter = (component, route = '/') => {
+const renderWithRouter = (component: ReactElement, route = '/') => {
   const history = createMemoryHistory({ initialEntries: [route] });
-  const Wrapper = ({ children }) => <Router history={history}>{children}</Router>;
+  const Wrapper: FC = (props) => <Router history={history} {...props} />;
 
   return {
     ...render(component, { wrapper: Wrapper }),
