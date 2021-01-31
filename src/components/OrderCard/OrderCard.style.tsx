@@ -12,8 +12,7 @@ export const Container = styled.div`
 
 export const Top = styled.div`
   display: flex;
-  margin-bottom: 8px;
-  justify-content: space-between;
+  margin-bottom: 16px;
 `;
 
 export const OrderNumber = styled.span`
@@ -30,19 +29,7 @@ export const OrderDateBox = styled.div`
 `;
 
 export const OrderDate = styled.span`
-  margin-right: 10px;
   position: relative;
-
-  &:after {
-    content: '';
-    position: absolute;
-    width: 2px;
-    height: 2px;
-    border-radius: 50%;
-    top: 6px;
-    right: -6px;
-    background: ${({ theme }) => theme.colors.gray[400]};
-  }
 `;
 
 export const PizzaName = styled.h5`
@@ -51,39 +38,6 @@ export const PizzaName = styled.h5`
   line-height: 20px;
   color: ${({ theme }) => theme.colors.primary.text};
   margin-bottom: 8px;
-`;
-
-export const IngredientsList = styled.div`
-  margin-bottom: 13px;
-  padding-bottom: 8px;
-  border-bottom: 1px dashed ${({ theme }) => theme.colors.gray[200]};
-`;
-
-export const IngredientsListItem = styled.span`
-  position: relative;
-  margin-right: 10px;
-  font-size: 12px;
-  line-height: 18px;
-  color: ${({ theme }) => theme.colors.gray[600]};
-
-  &::after {
-    content: '';
-    position: absolute;
-    width: 2px;
-    height: 2px;
-    border-radius: 50%;
-    top: 8px;
-    right: -6px;
-    background: ${({ theme }) => theme.colors.gray[600]};
-  }
-
-  &:last-child {
-    margin-right: 0;
-  }
-
-  &:last-child::after {
-    background: none;
-  }
 `;
 
 export const Footer = styled.div`
@@ -96,25 +50,21 @@ export const FooterBox = styled.div`
   line-height: 18px;
   color: ${({ theme }) => theme.colors.gray[600]};
   display: flex;
+  align-items: center;
+`;
+
+export const CardNumber = styled.span`
+  font-size: 14px;
+line-height: 20px;
+color: ${({ theme }) => theme.colors.primary.text};
 `;
 
 export const PizzaPrice = styled.span`
-  position: relative;
-  margin-right: 10px;
-  font-size: 12px;
-  line-height: 18px;
+  margin-right: 15px;
+  font-weight: 800;
+  font-size: 14px;
+  line-height: 20px;
   color: ${({ theme }) => theme.colors.gray[600]};
-
-  &::after {
-    content: '';
-    position: absolute;
-    width: 2px;
-    height: 2px;
-    border-radius: 50%;
-    top: 8px;
-    right: -6px;
-    background: ${({ theme }) => theme.colors.gray[600]};
-  }
 `;
 
 export const InProcessStatus = styled.span`

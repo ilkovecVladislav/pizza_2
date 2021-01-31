@@ -88,6 +88,7 @@ export const FooterWrapper = styled.div`
   max-width: 400px;
   display: flex;
   flex-direction: column;
+  padding: 0 16px;
 `;
 
 export const FooterInner = styled.div`
@@ -107,22 +108,4 @@ export const FooterRow = styled.div`
 export const FooterResult = styled(FooterRow)`
   font-weight: 500;
   margin-bottom: 12px;
-`;
-
-export const SubmitButton = styled.button`
-  border: unset;
-  background: ${({ theme }) => theme.colors.primary.main};
-  border-radius: 16px;
-  font-weight: 800;
-  font-size: 16px;
-  line-height: 16px;
-  color: #ffffff;
-  height: 40px;
-  cursor: pointer;
-
-  &:disabled {
-    background: #f9f9fb;
-    color: ${({ theme }) => theme.colors.gray[600]};
-    cursor: not-allowed;
-  }
 `;

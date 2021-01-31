@@ -11,8 +11,16 @@ export const Container = styled.div`
   position: relative;
 `;
 
-export const Content = styled.div`
+export const InnerContainer = styled.div`
   padding: 0 16px 54px;
+`;
+
+export const Title = styled.h1`
+  font-weight: 800;
+  font-size: 24px;
+  line-height: 32px;
+  color: ${({ theme }) => theme.colors.primary.text};
+  margin-bottom: 8px;
 `;
 
 export const PizzaName = styled.h4`
@@ -76,22 +84,13 @@ export const SubmitContainer = styled.div`
   right: 0;
   background: #ffffff;
   box-shadow: 0px -16px 32px rgba(75, 75, 124, 0.05), 0px 0px 4px rgba(75, 75, 124, 0.1);
-  padding: 12px 16px;
   display: flex;
   align-items: center;
   justify-content: center;
 `;
 
-export const SubmitButton = styled.button`
+export const SubmitInnerWrapper = styled.div`
   padding: 12px 16px;
-  height: 40px;
-  width: 328px;
-  background: ${({ theme }) => theme.colors.primary.main};
-  border-radius: 16px;
-  border: none;
-  font-weight: 800;
-  font-size: 16px;
-  line-height: 16px;
-  color: #ffffff;
-  cursor: pointer;
+  max-width: 400px;
+  width: 100%;
 `;

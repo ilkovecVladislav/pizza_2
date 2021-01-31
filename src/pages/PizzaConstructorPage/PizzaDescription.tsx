@@ -4,9 +4,9 @@ import reduce from 'lodash/reduce';
 import compact from 'lodash/compact';
 
 import type Ingredient from 'services/types/Ingredient';
+import { PIZZA_SIZES } from 'constants/common';
 import { useIngredients } from './state/selectors';
 import { Container, IngredientsList, IngredientsListItem } from './PizzaDescription.style';
-import { PIZZA_SIZES } from './constants';
 import type { FormValues } from './types';
 
 const normalizeIngredient = (data: Ingredient[]): { [key: string]: Ingredient } =>
@@ -21,9 +21,7 @@ const PizzaDescription = ({ data }: { data: FormValues }): JSX.Element => {
   const normalizedMeat = normalizeIngredient(meat);
 
   const pizzaParamsLabel = data.size
-    ? // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      `${PIZZA_SIZES[data.size].label} на ${data.dough === 'thin' ? 'тонком' : 'толстом'} тесте`
+    ? `${PIZZA_SIZES[data.size].label} на ${data.dough === 'thin' ? 'тонком' : 'толстом'} тесте`
     : '';
 
   const sauceLabel =

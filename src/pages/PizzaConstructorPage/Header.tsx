@@ -10,7 +10,8 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex: none;
+  box-shadow: 0px 3px 4px rgba(46, 49, 55, 0.05), 0px 0px 2px rgba(46, 49, 55, 0.15);
+  margin-bottom: 16px;
 `;
 
 const Header = (): ReactElement => (

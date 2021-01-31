@@ -4,22 +4,23 @@ import arrowIcon from 'assets/icons/left-arrow.svg';
 
 export const Container = styled.div`
   height: 56px;
-  padding: 8px 16px;
   display: flex;
   align-items: center;
+  padding-left: 16px;
+  padding-right: 8px;
   background: #fff;
   margin-bottom: 16px;
+  box-shadow: 0px 3px 4px rgba(46, 49, 55, 0.05), 0px 0px 2px rgba(46, 49, 55, 0.15);
 `;
 
-export const Title = styled.h3`
-  margin-left: 5px;
+export const Title = styled.h2`
   font-weight: 800;
   font-size: 20px;
   line-height: 28px;
   color: ${({ theme }) => theme.colors.primary.text};
 `;
 
-export const BackButton = styled.button`
+export const LinkButton = styled.button`
   width: 40px;
   height: 40px;
   border: none;

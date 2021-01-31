@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useDispatch } from 'react-redux';
 
+import Header from 'components/Header';
+import Button from 'components/Button';
 import Input from 'components/Form/Input';
-import Container from './Container';
+import Container from '../components/Container';
+import Form from '../components/Form';
+import LinkButton from '../components/LinkButton';
 import { logIn } from '../state/reducer';
 
 const schema = yup.object().shape({
@@ -19,13 +23,9 @@ type FormValues = {
   password: string;
 };
 
-const LogIn = (): JSX.Element => {
+const LogIn = (): ReactElement => {
   const history = useHistory();
   const dispatch = useDispatch();
-
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const handleGoBack = () => history.goBack();
 
   const { register, handleSubmit, formState, errors } = useForm<FormValues>({
     resolver: yupResolver(schema),
@@ -38,11 +38,9 @@ const LogIn = (): JSX.Element => {
 
   return (
     <Container>
-      <div className="top">
-        <button className="back-btn" type="button" onClick={handleGoBack} />
-        <h3 className="title">Авторизация</h3>
-      </div>
-      <form className="form" onSubmit={handleSubmit(onSubmit)}>
+      <Header title="Авторизация" link="/registration" />
+
+      <Form onSubmit={handleSubmit(onSubmit)}>
         <Input
           ref={register}
           label="E-mail"
@@ -57,16 +55,12 @@ const LogIn = (): JSX.Element => {
           name="password"
           error={errors?.password?.message}
         />
-        <button className="submit-btn" type="submit" disabled={!formState.isDirty}>
-          Войти
-        </button>
+        <Button text="Войти" type="submit" disabled={!formState.isDirty} />
 
         <Link to="/registration">
-          <button className="link-btn" type="button">
-            Зарегистрироваться
-          </button>
+          <LinkButton type="button">Зарегистрироваться</LinkButton>
         </Link>
-      </form>
+      </Form>
     </Container>
   );
 };

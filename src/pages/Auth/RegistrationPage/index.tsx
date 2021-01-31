@@ -5,8 +5,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useDispatch } from 'react-redux';
 
+import Header from 'components/Header';
+import Button from 'components/Button';
 import Input from 'components/Form/Input';
-import Container from './Container';
+import Container from '../components/Container';
+import Form from '../components/Form';
+import LinkButton from '../components/LinkButton';
 import { logIn } from '../state/reducer';
 
 const schema = yup.object().shape({
@@ -27,10 +31,6 @@ const Registration = (): JSX.Element => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const handleGoBack = () => history.goBack();
-
   const { register, handleSubmit, formState, errors } = useForm<FormValues>({
     resolver: yupResolver(schema),
   });
@@ -42,11 +42,9 @@ const Registration = (): JSX.Element => {
 
   return (
     <Container>
-      <div className="top">
-        <button className="back-btn" type="button" onClick={handleGoBack} />
-        <h3 className="title">Регистрация</h3>
-      </div>
-      <form className="form" onSubmit={handleSubmit(onSubmit)}>
+      <Header title="Регистрация" link="/" />
+
+      <Form onSubmit={handleSubmit(onSubmit)}>
         <Input
           ref={register}
           label="E-mail"
@@ -61,15 +59,12 @@ const Registration = (): JSX.Element => {
           name="password"
           error={errors?.password?.message}
         />
-        <button className="submit-btn" type="submit" disabled={!formState.isDirty}>
-          Зарегистрироваться
-        </button>
+        <Button text="Зарегистрироваться" type="submit" disabled={!formState.isDirty} />
+
         <Link to="/">
-          <button className="link-btn" type="button">
-            Войти
-          </button>
+          <LinkButton type="button">Войти</LinkButton>
         </Link>
-      </form>
+      </Form>
     </Container>
   );
 };

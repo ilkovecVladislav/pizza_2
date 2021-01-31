@@ -18,9 +18,9 @@ import {
   FooterInner,
   FooterRow,
   FooterResult,
-  SubmitButton,
 } from './Form.style';
 import Input from 'components/Form/Input';
+import Button from 'components/Button';
 
 const schema = yup.object().shape({
   address: yup
@@ -194,9 +194,11 @@ const Form = ({ price = 0, formSubmit }: Props): JSX.Element => {
             <span>К оплате</span>
             <span>{price + DELIVERY_COST} руб</span>
           </FooterResult>
-          <SubmitButton type="submit" disabled={!formState.isDirty}>
-            Заказать за {price + DELIVERY_COST} руб
-          </SubmitButton>
+          <Button
+            text={`Заказать за ${price + DELIVERY_COST} руб`}
+            type="submit"
+            disabled={!formState.isDirty}
+          />
         </FooterWrapper>
       </Footer>
     </form>

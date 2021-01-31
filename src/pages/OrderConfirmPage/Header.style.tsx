@@ -9,6 +9,9 @@ export const Container = styled.div`
   justify-content: space-between;
   padding-left: 16px;
   padding-right: 8px;
+  margin-bottom: 40px;
+  box-shadow: 0px 3px 4px rgba(46, 49, 55, 0.05), 0px 0px 2px rgba(46, 49, 55, 0.15);
+  background: #ffffff;
 `;
 
 export const Title = styled.h2`

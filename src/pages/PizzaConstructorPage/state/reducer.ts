@@ -39,6 +39,15 @@ const pizzaConstructorSlice = createSlice({
     setIngredients(state, action: PayloadAction<PizzaIngredients>) {
       state.ingredients = action.payload;
     },
+    resetPizza(state) {
+      state.pizza = {
+        size: '30',
+        dough: 'thin',
+        cheese: [],
+        vegetables: [],
+        meat: [],
+      };
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -52,6 +61,6 @@ const pizzaConstructorSlice = createSlice({
   },
 });
 
-export const { setPizza, setIngredients } = pizzaConstructorSlice.actions;
+export const { setPizza, setIngredients, resetPizza } = pizzaConstructorSlice.actions;
 
 export default pizzaConstructorSlice.reducer;

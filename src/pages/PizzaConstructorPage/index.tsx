@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { ReactElement } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
@@ -7,34 +7,32 @@ import reduce from 'lodash/reduce';
 
 import RadioButtonGroupField from 'components/Form/RadioButtonGroupField';
 import IngredientCheckbox from 'components/Form/IngredientCheckbox';
-import { loadIngredients, setPizza } from './state/reducer';
-import { useIngredients, useIsIngredientsLoading } from './state/selectors';
+import Button from 'components/Button';
+import { PIZZA_SIZES, DOUGH } from 'constants/common';
+import useCalculatePizzaPrice from 'utils/hooks/useCalculatePizzaPrice';
+import { setPizza } from './state/reducer';
+import { useIngredients, useIngredientsArray, useIsIngredientsLoading } from './state/selectors';
 import {
   Container,
-  Content,
+  InnerContainer,
   PizzaName,
+  Title,
   PizzaParamsWrapper,
   SauceWrapper,
   Row,
   IngredientsLabel,
   IngredientsItemsContainer,
   SubmitContainer,
-  SubmitButton,
+  SubmitInnerWrapper,
 } from './PizzaConstructor.style';
 import Header from './Header';
 import PizzaView from './PizzaView';
 import PizzaDescription from './PizzaDescription';
-import { PIZZA_SIZES, DOUGH } from './constants';
-import useCalculatePizzaPrice from './priceCalcHooks';
 import type { FormValues } from './types';
 
-const PizzaConstructor = (): JSX.Element => {
+const PizzaConstructor = (): ReactElement => {
   const history = useHistory();
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(loadIngredients());
-  }, [dispatch]);
 
   const { register, handleSubmit, watch, setValue } = useForm<FormValues>({
     defaultValues: {
@@ -46,18 +44,29 @@ const PizzaConstructor = (): JSX.Element => {
     },
   });
 
-  const formValues = watch();
-
   const allIngredients = useIngredients();
+  const ingredientsArray = useIngredientsArray();
 
   const { cheese = [], vegetables = [], sauces = [], meat = [] } = allIngredients;
 
+  const formValues = watch();
+  const {
+    cheese: cheeseValue = [],
+    meat: meatValue = [],
+    vegetables: vegetablesValue = [],
+    sauce,
+    dough,
+    size,
+  } = formValues;
+
+  const selectedIngredients = [...cheeseValue, ...meatValue, ...vegetablesValue];
+
   const price = useCalculatePizzaPrice({
-    selectedIngredients: formValues,
-    sauces,
-    meat,
-    cheese,
-    vegetables,
+    allIngredients: ingredientsArray,
+    size: size,
+    dough: dough,
+    saucesValue: sauce,
+    selectedIngredients: selectedIngredients,
   });
 
   const handleOrderClick = handleSubmit(() => {
@@ -80,8 +89,9 @@ const PizzaConstructor = (): JSX.Element => {
   return (
     <Container>
       <Header />
-      <PizzaView data={formValues} />
-      <Content>
+      <InnerContainer>
+        <Title>Собери свою пиццу</Title>
+        <PizzaView data={formValues} />
         <PizzaName>Pepperoni</PizzaName>
         <PizzaDescription data={formValues} />
         <form>
@@ -148,11 +158,11 @@ const PizzaConstructor = (): JSX.Element => {
             </IngredientsItemsContainer>
           </Row>
         </form>
-      </Content>
+      </InnerContainer>
       <SubmitContainer>
-        <SubmitButton className="submit" type="button" onClick={handleOrderClick}>
-          Заказать за {price} руб
-        </SubmitButton>
+        <SubmitInnerWrapper>
+          <Button text={`Заказать за ${price} руб`} onClick={handleOrderClick} />
+        </SubmitInnerWrapper>
       </SubmitContainer>
     </Container>
   );

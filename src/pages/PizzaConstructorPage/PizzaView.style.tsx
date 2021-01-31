@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 
 import plateImg from 'assets/images/plate.png';
-import { BIG_PIZZA_SIZE } from './constants';
+import { BIG_PIZZA_SIZE } from 'constants/common';
 
 export const Container = styled.div`
   width: 288px;
   height: 275px;
-  margin: 0 16px 16px;
+  margin-bottom: 16px;
   overflow: hidden;
   position: relative;
   flex: none;

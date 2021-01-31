@@ -1,50 +1,24 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
+import Button from 'components/Button';
 import errorIcon from 'assets/icons/error.svg';
+import { Label, Description } from './OrderConfirm.style';
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
 
-  h3 {
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 28px;
-    color: ${({ theme }) => theme.colors.primary.text};
-    margin-bottom: 8px;
-  }
-
-  p {
-    font-size: 16px;
-    line-height: 20px;
-    color: ${({ theme }) => theme.colors.gray[600]};
-    margin-bottom: 32px;
-    text-align: center;
-  }
   a {
     width: 100%;
-  }
-
-  button {
-    width: 100%;
-    border: none;
-    background: ${({ theme }) => theme.colors.primary.main};
-    border-radius: 16px;
-    height: 40px;
-    padding: 12px 16px;
-    font-weight: 800;
-    font-size: 16px;
-    line-height: 16px;
-    color: #ffffff;
   }
 `;
 
 const Error = styled.div`
-  width: 67px;
-  height: 67px;
+  width: 51px;
+  height: 51px;
   background: ${({ theme }) => theme.colors.primary.errorText};
   border-radius: 99px;
   position: relative;
@@ -64,14 +38,14 @@ const Error = styled.div`
   }
 `;
 
-const FailedVariant = (): JSX.Element => (
+const FailedVariant = (): ReactElement => (
   <Container>
     <Error />
-    <h3>Оплата не прошла</h3>
-    <p>Попробуйте еще раз или используйте другую карту</p>
+    <Label>Оплата не прошла</Label>
+    <Description>Попробуйте еще раз или используйте другую карту</Description>
 
     <Link to="/order-checkout">
-      <button type="button">Попробовать еще раз</button>
+      <Button text="Попробовать еще раз" />
     </Link>
   </Container>
 );
