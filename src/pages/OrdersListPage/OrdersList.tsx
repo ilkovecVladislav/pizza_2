@@ -21,18 +21,25 @@ const OrdersList = (): ReactElement => {
   const ingredients = useIngredientsArray();
 
   useEffect(() => {
+    let isActive = true;
     setIsLoading(true);
 
     getOrders()
       .then((res) => {
-        setData(res);
-        setIsLoading(false);
+        if (isActive) {
+          setData(res);
+          setIsLoading(false);
+        }
       })
       .catch((err) => console.log(err));
+
+    return () => {
+      isActive = false;
+    };
   }, []);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>Загрузка...</div>;
   }
 
   return (

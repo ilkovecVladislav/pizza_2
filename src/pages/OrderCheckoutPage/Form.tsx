@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -30,14 +30,17 @@ const schema = yup.object().shape({
     .max(70, 'Слишком длинный адресс'),
   entrance: yup
     .number()
+    .transform((cv, ov) => (ov === '' ? undefined : cv))
     .positive('Значение подъезда должно позитивным')
     .integer('Значение подъезда должно целым'),
   floor: yup
     .number()
+    .transform((cv, ov) => (ov === '' ? undefined : cv))
     .positive('Значение этажа должно позитивным')
     .integer('Значение этажа должно целым'),
   door: yup
     .number()
+    .transform((cv, ov) => (ov === '' ? undefined : cv))
     .positive('Значение квартира должно позитивным')
     .integer('Значение квартира должно целым'),
   card_number: yup
@@ -47,6 +50,7 @@ const schema = yup.object().shape({
   cardName: yup.string().required('Имя обязательное поле'),
   cardCode: yup
     .number()
+    .transform((cv, ov) => (ov === '' ? undefined : cv))
     .positive('Значение CVV должно позитивным')
     .integer('Значение CVV должно целым')
     .max(9999, 'Неверное значение CVV'),
@@ -63,7 +67,7 @@ const normalizeCardNumber = (value: string): string =>
 const DELIVERY_COST = 180;
 
 type Props = {
-  price?: number;
+  price: number;
   formSubmit: (data: FormValues) => void;
 };
 
@@ -79,8 +83,12 @@ type FormValues = {
   phone: string;
 };
 
-const Form = ({ price = 0, formSubmit }: Props): JSX.Element => {
+const Form = ({ price, formSubmit }: Props): ReactElement => {
   const { register, control, errors, formState, handleSubmit } = useForm<FormValues>({
+    defaultValues: {
+      card_number: '',
+      cardDate: '',
+    },
     resolver: yupResolver(schema),
   });
 
@@ -162,7 +170,13 @@ const Form = ({ price = 0, formSubmit }: Props): JSX.Element => {
                 error={errors?.cardCode?.message}
               />
             </CardRow>
-            <Input ref={register} placeholder="Имя как на карте" type="text" name="cardName" />
+            <Input
+              ref={register}
+              placeholder="Имя как на карте"
+              type="text"
+              name="cardName"
+              error={errors?.cardName?.message}
+            />
           </div>
         </CardSection>
 

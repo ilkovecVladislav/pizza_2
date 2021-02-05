@@ -45,13 +45,17 @@ const SuccessVariant = (): ReactElement => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    let isActive = true;
     getOrders()
       .then((res) => {
-        setData(res);
+        if (isActive) {
+          setData(res);
+        }
       })
       .catch((err) => console.log(err));
 
     return () => {
+      isActive = false;
       dispatch(resetPizza());
     };
   }, [dispatch]);

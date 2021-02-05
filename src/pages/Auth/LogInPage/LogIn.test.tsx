@@ -3,70 +3,86 @@ import { render, fireEvent } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
+import { Provider } from 'react-redux';
+import { ThemeProvider } from 'styled-components';
+import { createStore } from 'redux';
 
-import Registration from '.';
+import userReducer from 'pages/Auth/state/reducer';
+import theme from 'theme';
+import LogIn from '.';
+
+const store = createStore(userReducer, {
+  isAuthorized: false,
+});
 
 describe('LogIn', () => {
   it('renders correctly', () => {
     const history = createMemoryHistory();
-    const { getByText, getByLabelText } = render(
-      <Router history={history}>
-        <Registration />
-      </Router>,
+    const { getByText, getByLabelText, getAllByRole } = render(
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <Router history={history}>
+            <LogIn />
+          </Router>
+        </ThemeProvider>
+      </Provider>,
     );
 
-    expect(getByText('E-mail')).toBeInTheDocument();
+    expect(getByLabelText('E-mail')).toBeInTheDocument();
     expect(getByLabelText('Пароль')).toBeInTheDocument();
+    expect(getAllByRole('button')).toHaveLength(3);
+    expect(getByText('Войти')).toBeDisabled();
   });
-
-  describe('on submit', () => {
-    it('validates that email is filled in', async () => {
-      const history = createMemoryHistory();
-      const { getByText } = render(
-        <Router history={history}>
-          <Registration />
-        </Router>,
-      );
-
-      await act(async () => {
-        fireEvent.click(getByText(/Войти/i));
-      });
-
-      expect(getByText('Email обязательное поле')).toBeInTheDocument();
+  it('submit invalid form', async () => {
+    const history = createMemoryHistory();
+    const { getByText, getByLabelText } = render(
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <Router history={history}>
+            <LogIn />
+          </Router>
+        </ThemeProvider>
+      </Provider>,
+    );
+    fireEvent.input(getByLabelText('E-mail'), {
+      target: {
+        value: '123@m',
+      },
     });
-    it('validates that email is valid ', async () => {
-      const history = createMemoryHistory();
-      const { getByText, getByLabelText } = render(
-        <Router history={history}>
-          <Registration />
-        </Router>,
-      );
 
-      fireEvent.input(getByLabelText('E-mail'), {
-        target: {
-          value: '222@222',
-        },
-      });
-
-      await act(async () => {
-        fireEvent.click(getByText(/Войти/i));
-      });
-
-      expect(getByText('Неправильный email')).toBeInTheDocument();
+    await act(async () => {
+      fireEvent.click(getByText(/Войти/i));
     });
-    it('validates that password is filled in', async () => {
-      const history = createMemoryHistory();
-      const { getByText } = render(
-        <Router history={history}>
-          <Registration />
-        </Router>,
-      );
 
-      await act(async () => {
-        fireEvent.click(getByText(/Войти/i));
-      });
-
-      expect(getByText('Пароль обязательное поле')).toBeInTheDocument();
+    expect(getByText('Неправильный email')).toBeInTheDocument();
+    expect(getByText('Пароль обязательное поле')).toBeInTheDocument();
+  });
+  it('submit valid form', async () => {
+    const history = createMemoryHistory();
+    const { getByText, getByLabelText } = render(
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <Router history={history}>
+            <LogIn />
+          </Router>
+        </ThemeProvider>
+      </Provider>,
+    );
+    fireEvent.input(getByLabelText('E-mail'), {
+      target: {
+        value: 'testmail@gmail.com',
+      },
     });
+    fireEvent.input(getByLabelText('Пароль'), {
+      target: {
+        value: '123123123',
+      },
+    });
+
+    await act(async () => {
+      fireEvent.click(getByText(/Войти/i));
+    });
+
+    expect(store.getState().isAuthorized).toBe(true);
   });
 });

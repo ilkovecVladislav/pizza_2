@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -18,8 +18,7 @@ const schema = yup.object().shape({
   password: yup
     .string()
     .required('Пароль обязательное поле')
-    .min(8, 'Пароль должен быть минимум 8 символов')
-    .matches(/[a-zA-Z]/, 'Пароль может содержать только буквы латинского алфавита'),
+    .min(8, 'Пароль должен быть минимум 8 символов'),
 });
 
 type FormValues = {
@@ -27,7 +26,7 @@ type FormValues = {
   password: string;
 };
 
-const Registration = (): JSX.Element => {
+const Registration = (): ReactElement => {
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -43,7 +42,6 @@ const Registration = (): JSX.Element => {
   return (
     <Container>
       <Header title="Регистрация" link="/" />
-
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Input
           ref={register}
@@ -60,7 +58,6 @@ const Registration = (): JSX.Element => {
           error={errors?.password?.message}
         />
         <Button text="Зарегистрироваться" type="submit" disabled={!formState.isDirty} />
-
         <Link to="/">
           <LinkButton type="button">Войти</LinkButton>
         </Link>

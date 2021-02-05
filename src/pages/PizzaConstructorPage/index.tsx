@@ -83,7 +83,7 @@ const PizzaConstructor = (): ReactElement => {
   const isLoadingIngredients = useIsIngredientsLoading();
 
   if (isLoadingIngredients) {
-    return <span>Loading</span>;
+    return <span>Загрузка</span>;
   }
 
   return (

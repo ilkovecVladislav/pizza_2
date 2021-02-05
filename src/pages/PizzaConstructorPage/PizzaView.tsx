@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import map from 'lodash/map';
 
 import type Ingredient from 'services/types/Ingredient';
 import lushDough from 'assets/images/lush.png';
 import thinDough from 'assets/images/thin.png';
+import { THIN_DOUGH } from 'constants/common';
 import { Container, Dough, IngredientImg } from './PizzaView.style';
 import { useIngredients } from './state/selectors';
 import type { FormValues } from './types';
@@ -16,7 +17,7 @@ type RenderIngredientProps = {
   options: Ingredient[];
 };
 
-const RenderIngredient = ({ data, options, size }: RenderIngredientProps): JSX.Element => (
+const RenderIngredient = ({ data, options, size }: RenderIngredientProps): ReactElement => (
   <>
     {map(data, (value) => {
       const ingredient = options.find((element) => element.slug === value);
@@ -40,7 +41,7 @@ const RenderIngredient = ({ data, options, size }: RenderIngredientProps): JSX.E
   </>
 );
 
-const PizzaView = ({ data }: { data: FormValues }): JSX.Element => {
+const PizzaView = ({ data }: { data: FormValues }): ReactElement => {
   zIndex = 1;
   const { dough, cheese: cheeseValue, vegetables: vegetablesValue, meat: meatValue, size } = data;
   const allIngredients = useIngredients();
@@ -48,7 +49,7 @@ const PizzaView = ({ data }: { data: FormValues }): JSX.Element => {
 
   return (
     <Container>
-      <Dough src={dough === 'thin' ? thinDough : lushDough} size={size} alt="тесто" />
+      <Dough src={dough === THIN_DOUGH ? thinDough : lushDough} size={size} alt="тесто" />
       <RenderIngredient data={cheeseValue} size={size} options={cheese} />
       <RenderIngredient data={vegetablesValue} size={size} options={vegetables} />
       <RenderIngredient data={meatValue} size={size} options={meat} />

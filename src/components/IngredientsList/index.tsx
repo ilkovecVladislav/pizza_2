@@ -4,7 +4,7 @@ import compact from 'lodash/compact';
 
 import type Ingredient from 'services/types/Ingredient';
 import { Container, IngredientItem } from './IngredientsList.style';
-import { DoughKeys, PizzaSizesKeys, PIZZA_SIZES } from 'constants/common';
+import { DoughKeys, PizzaSizesKeys, PIZZA_SIZES, THIN_DOUGH } from 'constants/common';
 
 type Props = {
   size: PizzaSizesKeys;
@@ -21,9 +21,9 @@ const IngredientsList = ({
   allIngredients,
   selectedIngredients,
 }: Props): ReactElement => {
-  const pizzaParamsLabel = size
-    ? `${PIZZA_SIZES[size].label} на ${dough === 'thin' ? 'тонком' : 'толстом'} тесте`
-    : '';
+  const pizzaParamsLabel = `${PIZZA_SIZES[size].label} на ${
+    dough === THIN_DOUGH ? 'тонком' : 'толстом'
+  } тесте`;
 
   const selectedSauce = allIngredients.find((item) => item.slug === saucesValue);
   const sauceLabel = selectedSauce ? `${selectedSauce.name} соус` : null;
