@@ -1,7 +1,7 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { ThemeProvider } from 'styled-components';
-import { Route, MemoryRouter } from 'react-router-dom';
+import { Route, BrowserRouter } from 'react-router-dom';
 
 import theme from 'theme';
 import OrderConfirm from '.';
@@ -11,42 +11,41 @@ jest.mock('./FailedVariant', () => () => <div>Fail</div>);
 
 describe('OrderConfirm component', () => {
   it('renders correctly success variant by default', () => {
-    const { getByText } = render(
+    window.history.pushState({}, '', '/order-confirm');
+    render(
       <ThemeProvider theme={theme}>
-        <MemoryRouter initialEntries={['/order-confirm']}>
-          <Route path="/order-confirm/:status?">
-            <OrderConfirm />
-          </Route>
-        </MemoryRouter>
+        <BrowserRouter>
+          <OrderConfirm />
+        </BrowserRouter>
       </ThemeProvider>,
     );
 
-    expect(getByText('Success')).toBeInTheDocument();
+    expect(screen.getByText('Success')).toBeInTheDocument();
   });
   it('renders correctly success variant according to url parameter', () => {
-    const { getByText } = render(
+    window.history.pushState({}, '', '/order-confirm/success');
+    render(
       <ThemeProvider theme={theme}>
-        <MemoryRouter initialEntries={['/order-confirm/success']}>
-          <Route path="/order-confirm/:status?">
-            <OrderConfirm />
-          </Route>
-        </MemoryRouter>
+        <BrowserRouter>
+          <OrderConfirm />
+        </BrowserRouter>
       </ThemeProvider>,
     );
 
-    expect(getByText('Success')).toBeInTheDocument();
+    expect(screen.getByText('Success')).toBeInTheDocument();
   });
   it('renders correctly failed variant according to url parameter', () => {
-    const { getByText } = render(
+    window.history.pushState({}, '', '/order-confirm/error');
+    render(
       <ThemeProvider theme={theme}>
-        <MemoryRouter initialEntries={['/order-confirm/error']}>
+        <BrowserRouter>
           <Route path="/order-confirm/:status?">
             <OrderConfirm />
           </Route>
-        </MemoryRouter>
+        </BrowserRouter>
       </ThemeProvider>,
     );
 
-    expect(getByText('Fail')).toBeInTheDocument();
+    expect(screen.getByText('Fail')).toBeInTheDocument();
   });
 });

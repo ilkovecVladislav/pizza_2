@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { ThemeProvider } from 'styled-components';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
@@ -13,11 +13,13 @@ jest.mock('services/orders', () => ({
   getOrders: jest.fn(),
 }));
 
+const mockGetOrders = getOrders as jest.Mock;
+
 jest.mock('components/OrderCard', () => () => <div>Order card</div>);
 
 describe('SuccessVariant component', () => {
   it('renders correctly', async () => {
-    getOrders.mockResolvedValue([
+    mockGetOrders.mockResolvedValue([
       {
         id: 'd5fE_asz',
         ingredients: [],
@@ -30,7 +32,7 @@ describe('SuccessVariant component', () => {
       },
     ]);
     const store = createStore(rootReducer);
-    const { getByRole, getByText } = render(
+    render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>
           <SuccessVariant />
@@ -38,14 +40,14 @@ describe('SuccessVariant component', () => {
       </Provider>,
     );
 
-    expect(getByRole('heading')).toHaveTextContent('Спасибо за заказ!');
+    expect(screen.getByRole('heading')).toHaveTextContent('Спасибо за заказ!');
     await waitFor(() => {
-      expect(getByText('Order card')).toBeInTheDocument();
+      expect(screen.getByText('Order card')).toBeInTheDocument();
     });
   });
   it('console error if getOrders request is failed', async () => {
     const ERROR_TEXT = 'error';
-    getOrders.mockRejectedValue(ERROR_TEXT);
+    mockGetOrders.mockRejectedValue(ERROR_TEXT);
     window.console.log = jest.fn();
     const store = createStore(rootReducer);
     render(
@@ -61,7 +63,7 @@ describe('SuccessVariant component', () => {
     });
   });
   it('reset pizza after component unmounted', async () => {
-    getOrders.mockResolvedValue([]);
+    mockGetOrders.mockResolvedValue([]);
     const store = createStore(rootReducer);
     store.dispatch({ type: 'pizzaConstructor/setPizza', payload: { size: '35', dough: 'lush' } });
     const { unmount } = render(

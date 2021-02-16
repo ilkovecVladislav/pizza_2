@@ -1,10 +1,9 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { ThemeProvider } from 'styled-components';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
+import { configureStore } from '@reduxjs/toolkit';
+import { BrowserRouter } from 'react-router-dom';
 
 import { rootReducer } from 'store';
 import { getOrders } from 'services/orders';
@@ -14,6 +13,8 @@ import OrdersList from './OrdersList';
 jest.mock('services/orders', () => ({
   getOrders: jest.fn(),
 }));
+
+const mockGetOrders = getOrders as jest.Mock;
 
 jest.mock('components/OrderCard', () => () => <div>Order card</div>);
 
@@ -29,26 +30,24 @@ const getControlledPromise = () => {
 
 describe('OrdersList component', () => {
   it('renders loading message', async () => {
-    const history = createMemoryHistory();
-    getOrders.mockImplementation(() => getControlledPromise().promise);
-    const store = createStore(rootReducer);
-    const { getByText } = render(
+    mockGetOrders.mockImplementation(() => getControlledPromise().promise);
+    const store = configureStore({ reducer: rootReducer });
+    render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>
-          <Router history={history}>
+          <BrowserRouter>
             <OrdersList />
-          </Router>
+          </BrowserRouter>
         </ThemeProvider>
       </Provider>,
     );
 
     await waitFor(() => {
-      expect(getByText('Загрузка', { exact: false })).toBeInTheDocument();
+      expect(screen.getByText('Загрузка', { exact: false })).toBeInTheDocument();
     });
   });
   it('renders orders list', async () => {
-    const history = createMemoryHistory();
-    getOrders.mockResolvedValue([
+    mockGetOrders.mockResolvedValue([
       {
         id: 'd5fE_asz',
         ingredients: [],
@@ -70,51 +69,49 @@ describe('OrdersList component', () => {
         address: 'Sesame Street',
       },
     ]);
-    const store = createStore(rootReducer);
-    const { getAllByText } = render(
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <Router history={history}>
-            <OrdersList />
-          </Router>
-        </ThemeProvider>
-      </Provider>,
-    );
-
-    await waitFor(() => {
-      expect(getAllByText('Order card')).toHaveLength(2);
-    });
-  });
-  it('renders empty orders list', async () => {
-    const history = createMemoryHistory();
-    getOrders.mockResolvedValue([]);
-    const store = createStore(rootReducer);
-    const { queryByText } = render(
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <Router history={history}>
-            <OrdersList />
-          </Router>
-        </ThemeProvider>
-      </Provider>,
-    );
-
-    await waitFor(() => {
-      expect(queryByText('Order card')).not.toBeInTheDocument();
-    });
-  });
-  it('console error if getOrders request is failed', async () => {
-    const history = createMemoryHistory();
-    const ERROR_TEXT = 'error';
-    getOrders.mockRejectedValue(ERROR_TEXT);
-    window.console.log = jest.fn();
-    const store = createStore(rootReducer);
+    const store = configureStore({ reducer: rootReducer });
     render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>
-          <Router history={history}>
+          <BrowserRouter>
             <OrdersList />
-          </Router>
+          </BrowserRouter>
+        </ThemeProvider>
+      </Provider>,
+    );
+
+    await waitFor(() => {
+      expect(screen.getAllByText('Order card')).toHaveLength(2);
+    });
+  });
+  it('renders empty orders list', async () => {
+    mockGetOrders.mockResolvedValue([]);
+    const store = configureStore({ reducer: rootReducer });
+    render(
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <BrowserRouter>
+            <OrdersList />
+          </BrowserRouter>
+        </ThemeProvider>
+      </Provider>,
+    );
+
+    await waitFor(() => {
+      expect(screen.queryByText('Order card')).not.toBeInTheDocument();
+    });
+  });
+  it('console error if getOrders request is failed', async () => {
+    const ERROR_TEXT = 'error';
+    mockGetOrders.mockRejectedValue(ERROR_TEXT);
+    window.console.log = jest.fn();
+    const store = configureStore({ reducer: rootReducer });
+    render(
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <BrowserRouter>
+            <OrdersList />
+          </BrowserRouter>
         </ThemeProvider>
       </Provider>,
     );

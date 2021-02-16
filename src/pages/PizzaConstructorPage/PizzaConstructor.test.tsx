@@ -1,21 +1,20 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
-import { createStore } from 'redux';
+import { BrowserRouter } from 'react-router-dom';
+import { configureStore } from '@reduxjs/toolkit';
 
-import { rootReducer } from 'store';
 import theme from 'theme';
-import { loadIngredients } from './state/reducer';
+import pizzaConstructorReducer, { loadIngredients } from './state/reducer';
 import OrderCheckout from '.';
 import getIngredientsResponse, { groupedIngredients } from '__fixtures__/getIngredientsResponse';
 
 const mockHistoryPush = jest.fn();
 jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
+  ...(jest.requireActual('react-router-dom') as {}),
   useHistory: () => ({
     push: mockHistoryPush,
   }),
@@ -23,102 +22,119 @@ jest.mock('react-router-dom', () => ({
 
 describe('OrderCheckout component', () => {
   it('send order to the server', () => {
-    const history = createMemoryHistory();
-    const store = createStore(rootReducer);
+    const store = configureStore({
+      reducer: {
+        pizzaConstructor: pizzaConstructorReducer,
+      },
+    });
     store.dispatch({ type: loadIngredients.pending.type });
-    const { getByText } = render(
+    render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>
-          <Router history={history}>
+          <BrowserRouter>
             <OrderCheckout />
-          </Router>
+          </BrowserRouter>
         </ThemeProvider>
       </Provider>,
     );
 
-    expect(getByText('Загрузка')).toBeInTheDocument();
+    expect(screen.getByText(/загрузка/i)).toBeInTheDocument();
   });
   it('renders correctly', () => {
     const BASE_RADIO_INPUTS = 4; // pizza sizes(2) + pizza dough(2)
-    const history = createMemoryHistory();
-    const store = createStore(rootReducer);
+    const store = configureStore({
+      reducer: {
+        pizzaConstructor: pizzaConstructorReducer,
+      },
+    });
     store.dispatch({ type: loadIngredients.fulfilled.type, payload: groupedIngredients });
-    const { getAllByRole } = render(
+    render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>
-          <Router history={history}>
+          <BrowserRouter>
             <OrderCheckout />
-          </Router>
+          </BrowserRouter>
         </ThemeProvider>
       </Provider>,
     );
     const { sauces } = store.getState().pizzaConstructor.ingredients;
 
-    expect(getAllByRole('radio')).toHaveLength(BASE_RADIO_INPUTS + sauces.length);
-    expect(getAllByRole('checkbox')).toHaveLength(getIngredientsResponse.length - sauces.length);
+    expect(screen.getAllByRole('radio')).toHaveLength(BASE_RADIO_INPUTS + sauces.length);
+    expect(screen.getAllByRole('checkbox')).toHaveLength(
+      getIngredientsResponse.length - sauces.length,
+    );
   });
   it('renders correctly when ingredients are not loaded', async () => {
     const BASE_RADIO_INPUTS = 4;
-    const history = createMemoryHistory();
-    const store = createStore(rootReducer);
-    const { getAllByRole, queryAllByRole } = render(
+    const store = configureStore({
+      reducer: {
+        pizzaConstructor: pizzaConstructorReducer,
+      },
+    });
+    render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>
-          <Router history={history}>
+          <BrowserRouter>
             <OrderCheckout />
-          </Router>
+          </BrowserRouter>
         </ThemeProvider>
       </Provider>,
     );
 
-    expect(getAllByRole('radio')).toHaveLength(BASE_RADIO_INPUTS);
-    expect(queryAllByRole('checkbox')).toHaveLength(0);
+    expect(screen.getAllByRole('radio')).toHaveLength(BASE_RADIO_INPUTS);
+    expect(screen.queryAllByRole('checkbox')).toHaveLength(0);
   });
   it('change pizza data', async () => {
-    const history = createMemoryHistory();
-    const store = createStore(rootReducer);
+    const store = configureStore({
+      reducer: {
+        pizzaConstructor: pizzaConstructorReducer,
+      },
+    });
     store.dispatch({ type: loadIngredients.fulfilled.type, payload: groupedIngredients });
-    const { getAllByText, getByLabelText, getByText } = render(
+    render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>
-          <Router history={history}>
+          <BrowserRouter>
             <OrderCheckout />
-          </Router>
+          </BrowserRouter>
         </ThemeProvider>
       </Provider>,
     );
 
-    fireEvent.click(getByLabelText('35 см'));
-    fireEvent.click(getByLabelText('Пышное'));
-    fireEvent.click(getByText('Чеддер'));
-    fireEvent.click(getByText('Оливки'));
-    fireEvent.click(getByText('Бекон'));
+    userEvent.click(screen.getByLabelText('35 см'));
+    userEvent.click(screen.getByLabelText('Пышное'));
+    userEvent.click(screen.getByText('Чеддер'));
+    userEvent.click(screen.getByText('Оливки'));
+    userEvent.click(screen.getByText('Бекон'));
 
-    expect(getByLabelText('35 см')).toBeChecked();
-    expect(getByLabelText('Пышное')).toBeChecked();
-    expect(getAllByText('Оливки')).toHaveLength(2);
-    expect(getAllByText('Чеддер')).toHaveLength(2);
-    expect(getAllByText('Бекон')).toHaveLength(2);
+    expect(screen.getByLabelText('35 см')).toBeChecked();
+    expect(screen.getByLabelText('Пышное')).toBeChecked();
+    expect(screen.getAllByText('Оливки')).toHaveLength(2);
+    expect(screen.getAllByText('Чеддер')).toHaveLength(2);
+    expect(screen.getAllByText('Бекон')).toHaveLength(2);
   });
   it('submit pizza', async () => {
-    const history = createMemoryHistory();
-    const store = createStore(rootReducer);
+    const store = configureStore({
+      reducer: {
+        pizzaConstructor: pizzaConstructorReducer,
+      },
+    });
     store.dispatch({ type: loadIngredients.fulfilled.type, payload: groupedIngredients });
     const spy = jest.spyOn(store, 'dispatch');
-    const { getByLabelText, getByText } = render(
+    render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>
-          <Router history={history}>
+          <BrowserRouter>
             <OrderCheckout />
-          </Router>
+          </BrowserRouter>
         </ThemeProvider>
       </Provider>,
     );
-    fireEvent.click(getByLabelText('35 см'));
-    fireEvent.click(getByLabelText('Пышное'));
+    userEvent.click(screen.getByLabelText('35 см'));
+    userEvent.click(screen.getByLabelText('Пышное'));
 
     await act(async () => {
-      fireEvent.click(getByText('Заказать за', { exact: false }));
+      userEvent.click(screen.getByText(/заказать/i));
     });
 
     expect(spy).toHaveBeenCalledTimes(1);

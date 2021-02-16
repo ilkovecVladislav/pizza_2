@@ -1,5 +1,6 @@
 import React from 'react';
-import { fireEvent, render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { ThemeProvider } from 'styled-components';
 
 import theme from 'theme';
@@ -18,33 +19,33 @@ jest.mock('./OrdersList.tsx', () => () => <div>Orders list</div>);
 
 describe('OrdersListPage component', () => {
   it('renders authorization button', async () => {
-    const { getByRole } = render(
+    render(
       <ThemeProvider theme={theme}>
         <OrdersListPage />
       </ThemeProvider>,
     );
 
-    expect(getByRole('button')).toHaveTextContent('Авторизоваться');
+    expect(screen.getByRole('button')).toHaveTextContent('Авторизоваться');
   });
   it('handle authorization button click', async () => {
-    const { getByRole } = render(
+    render(
       <ThemeProvider theme={theme}>
         <OrdersListPage />
       </ThemeProvider>,
     );
 
-    fireEvent.click(getByRole('button'));
+    userEvent.click(screen.getByRole('button'));
 
     expect(mockAuthFunction).toHaveBeenCalled();
   });
   it('render orders list', async () => {
     mockIsAuthenticated = true;
-    const { getByText } = render(
+    render(
       <ThemeProvider theme={theme}>
         <OrdersListPage />
       </ThemeProvider>,
     );
 
-    expect(getByText('Orders list')).toBeInTheDocument();
+    expect(screen.getByText('Orders list')).toBeInTheDocument();
   });
 });

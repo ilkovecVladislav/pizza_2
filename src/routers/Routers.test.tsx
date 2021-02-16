@@ -1,7 +1,8 @@
 import React, { FC, ReactElement } from 'react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { ThemeProvider } from 'styled-components';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
@@ -15,7 +16,11 @@ import App from '.';
 jest.mock('services/ingredients', () => ({
   getIngredients: jest.fn(),
 }));
-jest.mock('containers/App', () => ({ children }) => <div>{children}</div>);
+jest.mock('containers/App', () => ({ children }: { children: React.ReactNode }) => (
+  <div>{children}</div>
+));
+
+const mockGetIngredients = getIngredients as jest.Mock;
 
 const renderWithRouter = (component: ReactElement, route = '/') => {
   const history = createMemoryHistory({ initialEntries: [route] });
@@ -42,7 +47,7 @@ describe('Routers', () => {
     expect(container.innerHTML).toMatch('Авторизация');
     expect(getByText(/зарегистрироваться/i)).toBeInTheDocument();
 
-    fireEvent.click(getByText(/зарегистрироваться/i));
+    userEvent.click(getByText(/зарегистрироваться/i));
 
     waitFor(() => {
       expect(getByRole('heading')).toHaveTextContent('Регистрация');
@@ -52,7 +57,7 @@ describe('Routers', () => {
     const { container, getByText, getByRole } = renderWithRouter(<App />, '/registration');
     expect(getByRole('heading')).toHaveTextContent('Регистрация');
 
-    fireEvent.click(getByText(/зарегистрироваться/i));
+    userEvent.click(getByText(/зарегистрироваться/i));
 
     waitFor(() => {
       expect(container.innerHTML).toMatch('Загрузка');
@@ -64,7 +69,7 @@ describe('Routers', () => {
     const store = configureStore({
       reducer: rootReducer,
     });
-    getIngredients.mockResolvedValue(getIngredientsResponse);
+    mockGetIngredients.mockResolvedValue(getIngredientsResponse);
     const { container, getByText } = render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>
@@ -76,7 +81,7 @@ describe('Routers', () => {
     );
     expect(getByText(/собери свою пиццу/i, { exact: false })).toBeInTheDocument();
 
-    fireEvent.click(getByText(/заказать/i));
+    userEvent.click(getByText(/заказать/i));
 
     waitFor(() => {
       expect(container.innerHTML).toMatch('Оформление заказа');

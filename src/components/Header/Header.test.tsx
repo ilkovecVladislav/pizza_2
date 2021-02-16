@@ -1,6 +1,6 @@
 import React from 'react';
 import { ThemeProvider } from 'styled-components';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 
 import theme from 'theme';
@@ -10,7 +10,7 @@ describe('Header component', () => {
   it('renders correctly', () => {
     const TITLE = 'Home page';
     const LINK = '/home';
-    const { getByText, getByRole } = render(
+    render(
       <ThemeProvider theme={theme}>
         <BrowserRouter>
           <Header title={TITLE} link={LINK} />
@@ -18,7 +18,7 @@ describe('Header component', () => {
       </ThemeProvider>,
     );
 
-    expect(getByText(TITLE)).toBeInTheDocument();
-    expect(getByRole('link')).toHaveAttribute('href', LINK);
+    expect(screen.getByRole('heading')).toHaveTextContent(TITLE);
+    expect(screen.getByRole('link')).toHaveAttribute('href', LINK);
   });
 });

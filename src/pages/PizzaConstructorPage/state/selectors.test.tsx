@@ -1,7 +1,10 @@
 import { renderHook } from '@testing-library/react-hooks';
 import { Provider } from 'react-redux';
-import configureStore from 'redux-mock-store';
+import { configureStore } from '@reduxjs/toolkit';
 
+import { PizzaSizesKeys, DoughKeys } from 'constants/common';
+import type Categories from 'types/Categories';
+import pizzaConstructorReducer from './reducer';
 import {
   usePizzaData,
   useIngredients,
@@ -9,25 +12,27 @@ import {
   useIsIngredientsLoading,
 } from './selectors';
 
-const mockStore = configureStore();
-
 describe('useIsAuthorized hook', () => {
   it('returns pizza data', () => {
     const PIZZA = {
-      size: '35',
-      dough: 'thin',
+      size: '35' as PizzaSizesKeys,
+      dough: 'thin' as DoughKeys,
       cheese: [],
       vegetables: [],
       meat: ['bacon'],
     };
-    const initialState = {
-      pizzaConstructor: {
-        pizza: PIZZA,
-        ingredients: {},
-        isLoadingIngredients: false,
+    const store = configureStore({
+      reducer: {
+        pizzaConstructor: pizzaConstructorReducer,
       },
-    };
-    const store = mockStore(initialState);
+      preloadedState: {
+        pizzaConstructor: {
+          pizza: PIZZA,
+          ingredients: {},
+          isLoadingIngredients: false,
+        },
+      },
+    });
     const { result } = renderHook(() => usePizzaData(), {
       wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
     });
@@ -38,7 +43,7 @@ describe('useIsAuthorized hook', () => {
     const INGREDIENTS = {
       cheese: [
         {
-          category: 'cheese',
+          category: 'cheese' as Categories,
           id: 'zPVQ1E4O',
           image: 'cheddar.png',
           name: 'Чеддер',
@@ -48,14 +53,18 @@ describe('useIsAuthorized hook', () => {
         },
       ],
     };
-    const initialState = {
-      pizzaConstructor: {
-        pizza: { size: '35', dough: 'thin', cheese: [], vegetables: [], meat: ['bacon'] },
-        ingredients: INGREDIENTS,
-        isLoadingIngredients: false,
+    const store = configureStore({
+      reducer: {
+        pizzaConstructor: pizzaConstructorReducer,
       },
-    };
-    const store = mockStore(initialState);
+      preloadedState: {
+        pizzaConstructor: {
+          pizza: { size: '35', dough: 'thin', cheese: [], vegetables: [], meat: ['bacon'] },
+          ingredients: INGREDIENTS,
+          isLoadingIngredients: false,
+        },
+      },
+    });
     const { result } = renderHook(() => useIngredients(), {
       wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
     });
@@ -64,7 +73,7 @@ describe('useIsAuthorized hook', () => {
   });
   it('returns ingredients array', () => {
     const INGREDIENT = {
-      category: 'cheese',
+      category: 'cheese' as Categories,
       id: 'zPVQ1E4O',
       image: 'cheddar.png',
       name: 'Чеддер',
@@ -72,17 +81,20 @@ describe('useIsAuthorized hook', () => {
       slug: 'cheddar',
       thumbnail: 'cheddar-thumb.png',
     };
-    const INGREDIENTS = {
-      cheese: [INGREDIENT],
-    };
-    const initialState = {
-      pizzaConstructor: {
-        pizza: { size: '35', dough: 'thin', cheese: [], vegetables: [], meat: ['bacon'] },
-        ingredients: INGREDIENTS,
-        isLoadingIngredients: false,
+    const store = configureStore({
+      reducer: {
+        pizzaConstructor: pizzaConstructorReducer,
       },
-    };
-    const store = mockStore(initialState);
+      preloadedState: {
+        pizzaConstructor: {
+          pizza: { size: '35', dough: 'thin', cheese: [], vegetables: [], meat: ['bacon'] },
+          ingredients: {
+            cheese: [INGREDIENT],
+          },
+          isLoadingIngredients: false,
+        },
+      },
+    });
     const { result } = renderHook(() => useIngredientsArray(), {
       wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
     });
@@ -90,14 +102,18 @@ describe('useIsAuthorized hook', () => {
     expect(result.current).toEqual([INGREDIENT]);
   });
   it('returns ingredients loading status', () => {
-    const initialState = {
-      pizzaConstructor: {
-        pizza: { size: '35', dough: 'thin', cheese: [], vegetables: [], meat: ['bacon'] },
-        ingredients: {},
-        isLoadingIngredients: false,
+    const store = configureStore({
+      reducer: {
+        pizzaConstructor: pizzaConstructorReducer,
       },
-    };
-    const store = mockStore(initialState);
+      preloadedState: {
+        pizzaConstructor: {
+          pizza: { size: '35', dough: 'thin', cheese: [], vegetables: [], meat: ['bacon'] },
+          ingredients: {},
+          isLoadingIngredients: false,
+        },
+      },
+    });
     const { result } = renderHook(() => useIsIngredientsLoading(), {
       wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
     });

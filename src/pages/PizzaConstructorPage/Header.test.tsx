@@ -1,68 +1,58 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
-import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
-import { createStore } from 'redux';
 
-import userReducer from 'pages/Auth/state/reducer';
 import theme from 'theme';
 import Header from './Header';
 
-const store = createStore(userReducer, {
-  isAuthorized: false,
-});
-
 describe('Header component', () => {
   it('renders correctly', () => {
-    const history = createMemoryHistory();
-    const { getByRole } = render(
+    render(
       <ThemeProvider theme={theme}>
-        <Router history={history}>
+        <BrowserRouter>
           <Header />
-        </Router>
+        </BrowserRouter>
       </ThemeProvider>,
     );
 
-    expect(getByRole('button')).toBeInTheDocument();
-    expect(getByRole('img')).toHaveAttribute('alt', 'логотип');
+    expect(screen.getByRole('button')).toBeInTheDocument();
+    expect(screen.getByRole('img')).toHaveAttribute('alt', 'логотип');
   });
   it('open popup', () => {
-    const history = createMemoryHistory();
-    const { getByRole } = render(
+    render(
       <ThemeProvider theme={theme}>
-        <Router history={history}>
+        <BrowserRouter>
           <Header />
-        </Router>
+        </BrowserRouter>
       </ThemeProvider>,
     );
 
-    fireEvent.click(getByRole('button'));
+    userEvent.click(screen.getByRole('button'));
 
-    expect(getByRole('link')).toHaveAttribute('href', '/orders-history');
+    expect(screen.getByRole('link')).toHaveAttribute('href', '/orders-history');
   });
   it('close popup', async () => {
     const map: any = {};
     document.addEventListener = jest.fn((event, callback) => {
       map[event] = callback;
     });
-    const history = createMemoryHistory();
-    const { getByRole, queryByRole } = render(
+    render(
       <ThemeProvider theme={theme}>
-        <Router history={history}>
+        <BrowserRouter>
           <Header />
-        </Router>
+        </BrowserRouter>
       </ThemeProvider>,
     );
-    fireEvent.click(getByRole('button'));
+    userEvent.click(screen.getByRole('button'));
 
     act(() => {
       map.mousedown({ target: document.createElement('img') });
     });
 
-    expect(queryByRole('link')).not.toBeInTheDocument();
+    expect(screen.queryByRole('link')).not.toBeInTheDocument();
     expect(document.addEventListener).toBeCalledTimes(1);
   });
 });

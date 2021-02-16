@@ -1,6 +1,7 @@
 import React from 'react';
 import { ThemeProvider } from 'styled-components';
-import { render, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import Categories from 'types/Categories';
 import theme from 'theme';
@@ -22,7 +23,7 @@ describe('IngredientCheckbox component', () => {
       image: 'bacon.png',
       thumbnail: INGREDIENT_THUMBNAIL,
     };
-    const { getByRole, getByText } = render(
+    render(
       <ThemeProvider theme={theme}>
         <IngredientCheckbox
           name={CHECKBOX_NAME}
@@ -33,16 +34,16 @@ describe('IngredientCheckbox component', () => {
       </ThemeProvider>,
     );
 
-    expect(getByRole('img')).toHaveAttribute('alt', INGREDIENT_NAME);
-    expect(getByRole('img')).toHaveAttribute(
+    expect(screen.getByRole('img')).toHaveAttribute('alt', INGREDIENT_NAME);
+    expect(screen.getByRole('img')).toHaveAttribute(
       'src',
       `${process.env.REACT_APP_API_URL}${INGREDIENT_THUMBNAIL}`,
     );
-    expect(getByRole('checkbox')).not.toBeChecked();
-    expect(getByRole('checkbox')).toHaveAttribute('name', CHECKBOX_NAME);
-    expect(getByRole('checkbox')).toHaveAttribute('value', INGREDIENT_SLUG);
-    expect(getByText(INGREDIENT_PRICE, { exact: false })).toBeInTheDocument();
-    expect(getByText(INGREDIENT_NAME)).toBeInTheDocument();
+    expect(screen.getByRole('checkbox')).not.toBeChecked();
+    expect(screen.getByRole('checkbox')).toHaveAttribute('name', CHECKBOX_NAME);
+    expect(screen.getByRole('checkbox')).toHaveAttribute('value', INGREDIENT_SLUG);
+    expect(screen.getByText(INGREDIENT_PRICE, { exact: false })).toBeInTheDocument();
+    expect(screen.getByText(INGREDIENT_NAME)).toBeInTheDocument();
   });
   it('renders correctly checked input', () => {
     const INGREDIENT_SLUG = 'bacon';
@@ -55,7 +56,7 @@ describe('IngredientCheckbox component', () => {
       image: 'bacon.png',
       thumbnail: 'bacon-thumb.png',
     };
-    const { getByTestId } = render(
+    render(
       <ThemeProvider theme={theme}>
         <IngredientCheckbox
           name="meat"
@@ -66,7 +67,7 @@ describe('IngredientCheckbox component', () => {
       </ThemeProvider>,
     );
 
-    expect(getByTestId('checkbox-container')).toHaveStyleRule(
+    expect(screen.getByTestId('checkbox-container')).toHaveStyleRule(
       'border-color',
       theme.colors.primary.main,
     );
@@ -82,14 +83,14 @@ describe('IngredientCheckbox component', () => {
       image: 'bacon.png',
       thumbnail: 'bacon-thumb.png',
     };
-    const { getByRole } = render(
+    render(
       <ThemeProvider theme={theme}>
         <IngredientCheckbox name="meat" option={ingredient} value={[]} setValue={handleSetValue} />
       </ThemeProvider>,
     );
-    const checkbox = getByRole('checkbox');
+    const checkbox = screen.getByRole('checkbox');
 
-    fireEvent.click(checkbox);
+    userEvent.click(checkbox);
 
     expect(handleSetValue).not.toHaveBeenCalled();
   });
@@ -107,7 +108,7 @@ describe('IngredientCheckbox component', () => {
       image: 'bacon.png',
       thumbnail: 'bacon-thumb.png',
     };
-    const { getByText } = render(
+    render(
       <ThemeProvider theme={theme}>
         <IngredientCheckbox
           name={CHECKBOX_NAME}
@@ -117,9 +118,9 @@ describe('IngredientCheckbox component', () => {
         />
       </ThemeProvider>,
     );
-    const checkbox = getByText(INGREDIENT_NAME);
+    const checkbox = screen.getByText(INGREDIENT_NAME);
 
-    fireEvent.click(checkbox);
+    userEvent.click(checkbox);
 
     expect(handleSetValue).toHaveBeenCalledTimes(1);
     expect(handleSetValue).toHaveBeenCalledWith(CHECKBOX_NAME, [INGREDIENT_SLUG]);
@@ -139,7 +140,7 @@ describe('IngredientCheckbox component', () => {
       image: 'bacon.png',
       thumbnail: 'bacon-thumb.png',
     };
-    const { getByText } = render(
+    render(
       <ThemeProvider theme={theme}>
         <IngredientCheckbox
           name={CHECKBOX_NAME}
@@ -149,9 +150,9 @@ describe('IngredientCheckbox component', () => {
         />
       </ThemeProvider>,
     );
-    const checkbox = getByText(INGREDIENT_NAME);
+    const checkbox = screen.getByText(INGREDIENT_NAME);
 
-    fireEvent.click(checkbox);
+    userEvent.click(checkbox);
 
     expect(handleSetValue).toHaveBeenCalledTimes(1);
     expect(handleSetValue).toHaveBeenCalledWith(CHECKBOX_NAME, [PEPPER_SLUG]);

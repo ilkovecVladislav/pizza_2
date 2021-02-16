@@ -1,19 +1,22 @@
 import { renderHook } from '@testing-library/react-hooks';
 import { Provider } from 'react-redux';
-import configureStore from 'redux-mock-store';
+import { configureStore } from '@reduxjs/toolkit';
 
+import userReducer from './reducer';
 import useIsAuthorized from './selectors';
-
-const mockStore = configureStore();
 
 describe('useIsAuthorized hook', () => {
   it('returns is user authorized', () => {
-    const initialState = {
-      user: {
-        isAuthorized: true,
+    const store = configureStore({
+      reducer: {
+        user: userReducer,
       },
-    };
-    const store = mockStore(initialState);
+      preloadedState: {
+        user: {
+          isAuthorized: true,
+        },
+      },
+    });
     const { result } = renderHook(() => useIsAuthorized(), {
       wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
     });

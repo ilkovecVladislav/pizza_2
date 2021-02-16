@@ -1,6 +1,6 @@
 import React from 'react';
 import { ThemeProvider } from 'styled-components';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import Categories from 'types/Categories';
 import theme from 'theme';
@@ -9,7 +9,7 @@ import IngredientsList from '.';
 describe('IngredientsList component', () => {
   it('renders correctly empty pizza', () => {
     const PIZZA_SIZE = '30';
-    const { getByText } = render(
+    render(
       <ThemeProvider theme={theme}>
         <IngredientsList
           size={PIZZA_SIZE}
@@ -20,13 +20,13 @@ describe('IngredientsList component', () => {
       </ThemeProvider>,
     );
 
-    expect(getByText(PIZZA_SIZE, { exact: false })).toHaveTextContent(
+    expect(screen.getByText(PIZZA_SIZE, { exact: false })).toHaveTextContent(
       `${PIZZA_SIZE} см на тонком тесте`,
     );
   });
   it('renders correctly empty pizza with wrong ingredients', () => {
     const PIZZA_SIZE = '30';
-    const { getByText } = render(
+    render(
       <ThemeProvider theme={theme}>
         <IngredientsList
           size={PIZZA_SIZE}
@@ -47,7 +47,7 @@ describe('IngredientsList component', () => {
       </ThemeProvider>,
     );
 
-    expect(getByText(PIZZA_SIZE, { exact: false })).toHaveTextContent(
+    expect(screen.getByText(PIZZA_SIZE, { exact: false })).toHaveTextContent(
       `${PIZZA_SIZE} см на тонком тесте`,
     );
   });
@@ -85,7 +85,7 @@ describe('IngredientsList component', () => {
         thumbnail: 'pepper-thumb.png',
       },
     ];
-    const { getByText } = render(
+    render(
       <ThemeProvider theme={theme}>
         <IngredientsList
           size={PIZZA_SIZE}
@@ -97,10 +97,10 @@ describe('IngredientsList component', () => {
       </ThemeProvider>,
     );
 
-    expect(getByText(PIZZA_SIZE, { exact: false })).toHaveTextContent(
+    expect(screen.getByText(PIZZA_SIZE, { exact: false })).toHaveTextContent(
       `${PIZZA_SIZE} см на толстом тесте`,
     );
-    expect(getByText(BACON_LABEL)).toHaveTextContent(BACON_LABEL);
-    expect(getByText(PEPPER_LABEL)).toHaveTextContent(PEPPER_LABEL);
+    expect(screen.getByText(BACON_LABEL)).toBeInTheDocument();
+    expect(screen.getByText(PEPPER_LABEL)).toBeInTheDocument();
   });
 });

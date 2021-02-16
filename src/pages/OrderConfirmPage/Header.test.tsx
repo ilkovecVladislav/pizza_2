@@ -1,24 +1,22 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { ThemeProvider } from 'styled-components';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
+import { BrowserRouter } from 'react-router-dom';
 
 import theme from 'theme';
 import Header from './Header';
 
 describe('Header component', () => {
   it('renders correctly', () => {
-    const history = createMemoryHistory();
-    const { getByRole } = render(
+    render(
       <ThemeProvider theme={theme}>
-        <Router history={history}>
+        <BrowserRouter>
           <Header />
-        </Router>
+        </BrowserRouter>
       </ThemeProvider>,
     );
 
-    expect(getByRole('heading')).toHaveTextContent('Оформление заказа');
-    expect(getByRole('link')).toHaveAttribute('href', '/orders-history');
+    expect(screen.getByRole('heading')).toHaveTextContent('Оформление заказа');
+    expect(screen.getByRole('link')).toHaveAttribute('href', '/orders-history');
   });
 });
