@@ -48,6 +48,7 @@ const Registration = (): ReactElement => {
           label="E-mail"
           type="email"
           name="email"
+          placeholder="email"
           error={errors?.email?.message}
         />
         <Input

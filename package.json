@@ -41,6 +41,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "test:coverage": "react-scripts test --coverage --runInBand --watchAll=false",
+    "e2e:open": "cypress open",
+    "e2e:headless": "cypress run --headless",
     "lint:css": "stylelint src/**/*.tsx",
     "eject": "react-scripts eject",
     "release": "(export REACT_APP_SENTRY_RELEASE=$(git rev-parse --short=12 HEAD); react-scripts build)"
@@ -64,8 +66,15 @@
     ]
   },
   "devDependencies": {
+    "@cypress/react": "^5.0.0",
+    "@testing-library/cypress": "^7.0.3",
     "@testing-library/react-hooks": "^5.0.3",
     "@types/styled-components": "^5.1.7",
+    "@typescript-eslint/eslint-plugin": "^4.15.1",
+    "@typescript-eslint/parser": "^4.15.1",
+    "cypress": "^6.5.0",
+    "cypress-log-to-output": "^1.1.2",
+    "eslint-plugin-cypress": "^2.11.2",
     "jest-styled-components": "^7.0.3",
     "prettier": "^2.2.1",
     "stylelint": "^13.9.0",
