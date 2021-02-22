@@ -5,6 +5,7 @@ import * as Sentry from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
 import { Auth0Provider } from '@auth0/auth0-react';
 import { ThemeProvider } from 'styled-components';
+import { BrowserRouter } from 'react-router-dom';
 
 import store from 'store';
 import AppRouter from 'routers';
@@ -31,7 +32,9 @@ ReactDOM.render(
     >
       <Provider store={store}>
         <ThemeProvider theme={theme}>
-          <AppRouter />
+          <BrowserRouter>
+            <AppRouter />
+          </BrowserRouter>
         </ThemeProvider>
       </Provider>
     </Auth0Provider>

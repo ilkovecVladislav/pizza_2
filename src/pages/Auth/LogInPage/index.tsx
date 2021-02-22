@@ -14,8 +14,11 @@ import LinkButton from '../components/LinkButton';
 import { logIn } from '../state/reducer';
 
 const schema = yup.object().shape({
-  email: yup.string().required('Email обязательное поле').email('Неправильный email'),
-  password: yup.string().required('Пароль обязательное поле'),
+  email: yup.string().email('Неправильный email').required('Email обязательное поле'),
+  password: yup
+    .string()
+    .required('Пароль обязательное поле')
+    .min(8, 'Пароль должен быть минимум 8 символов'),
 });
 
 type FormValues = {

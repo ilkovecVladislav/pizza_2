@@ -1,72 +1,73 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
+import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { ThemeProvider } from 'styled-components';
+import { createStore } from 'redux';
 
-import Registration from '.';
+import userReducer from 'pages/Auth/state/reducer';
+import theme from 'theme';
+import LogIn from '.';
+
+const store = createStore(userReducer, {
+  isAuthorized: false,
+});
 
 describe('LogIn', () => {
   it('renders correctly', () => {
-    const history = createMemoryHistory();
-    const { getByText, getByLabelText } = render(
-      <Router history={history}>
-        <Registration />
-      </Router>,
+    render(
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <BrowserRouter>
+            <LogIn />
+          </BrowserRouter>
+        </ThemeProvider>
+      </Provider>,
     );
 
-    expect(getByText('E-mail')).toBeInTheDocument();
-    expect(getByLabelText('Пароль')).toBeInTheDocument();
+    expect(screen.getByLabelText('E-mail')).toBeInTheDocument();
+    expect(screen.getByLabelText('Пароль')).toBeInTheDocument();
+    expect(screen.getAllByRole('button')).toHaveLength(3);
+    expect(screen.getByText(/войти/i)).toBeDisabled();
   });
+  it('submit invalid form', async () => {
+    render(
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <BrowserRouter>
+            <LogIn />
+          </BrowserRouter>
+        </ThemeProvider>
+      </Provider>,
+    );
+    userEvent.type(screen.getByLabelText('E-mail'), '123@m');
 
-  describe('on submit', () => {
-    it('validates that email is filled in', async () => {
-      const history = createMemoryHistory();
-      const { getByText } = render(
-        <Router history={history}>
-          <Registration />
-        </Router>,
-      );
-
-      await act(async () => {
-        fireEvent.click(getByText(/Войти/i));
-      });
-
-      expect(getByText('Email обязательное поле')).toBeInTheDocument();
+    await act(async () => {
+      fireEvent.click(screen.getByText(/войти/i));
     });
-    it('validates that email is valid ', async () => {
-      const history = createMemoryHistory();
-      const { getByText, getByLabelText } = render(
-        <Router history={history}>
-          <Registration />
-        </Router>,
-      );
 
-      fireEvent.input(getByLabelText('E-mail'), {
-        target: {
-          value: '222@222',
-        },
-      });
+    expect(screen.getByText('Неправильный email')).toBeInTheDocument();
+    expect(screen.getByText('Пароль обязательное поле')).toBeInTheDocument();
+  });
+  it('submit valid form', async () => {
+    render(
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <BrowserRouter>
+            <LogIn />
+          </BrowserRouter>
+        </ThemeProvider>
+      </Provider>,
+    );
+    userEvent.type(screen.getByLabelText('E-mail'), 'testmail@gmail.com');
+    userEvent.type(screen.getByLabelText('Пароль'), '123123123');
 
-      await act(async () => {
-        fireEvent.click(getByText(/Войти/i));
-      });
-
-      expect(getByText('Неправильный email')).toBeInTheDocument();
+    await act(async () => {
+      fireEvent.click(screen.getByText(/войти/i));
     });
-    it('validates that password is filled in', async () => {
-      const history = createMemoryHistory();
-      const { getByText } = render(
-        <Router history={history}>
-          <Registration />
-        </Router>,
-      );
 
-      await act(async () => {
-        fireEvent.click(getByText(/Войти/i));
-      });
-
-      expect(getByText('Пароль обязательное поле')).toBeInTheDocument();
-    });
+    expect(store.getState().isAuthorized).toBe(true);
   });
 });

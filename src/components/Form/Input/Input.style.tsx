@@ -1,29 +1,29 @@
 import styled from 'styled-components';
 
-export const StyledInput = styled.label<{ error: boolean }>`
+export const Container = styled.label`
   display: flex;
   flex-direction: column;
   margin-bottom: 16px;
+`;
 
-  input {
-    color: ${({ error, theme }) =>
-      error ? theme.colors.primary.errorText : theme.colors.primary.text};
-    border: 2px solid;
-    border-color: ${({ error, theme }) =>
-      error ? theme.colors.primary.errorText : theme.colors.gray[200]};
-    border-radius: 6px;
-    padding: 12px;
-    height: 40px;
-    margin-top: 8px;
+export const StyledInput = styled.input<{ error: boolean }>`
+  color: ${({ error, theme }) =>
+    error ? theme.colors.primary.errorText : theme.colors.primary.text};
+  border: 2px solid;
+  border-color: ${({ error, theme }) =>
+    error ? theme.colors.primary.errorText : theme.colors.gray[200]};
+  border-radius: 6px;
+  padding: 12px;
+  height: 40px;
+  margin-top: 8px;
+  font-size: 16px;
+  line-height: 16px;
+
+  &::placeholder {
     font-size: 16px;
     line-height: 16px;
-
-    &::placeholder {
-      font-size: 16px;
-      line-height: 16px;
-      color: ${({ theme }) => theme.colors.gray[400]};
-      opacity: 0.5;
-    }
+    color: ${({ theme }) => theme.colors.gray[400]};
+    opacity: 0.5;
   }
 `;
 

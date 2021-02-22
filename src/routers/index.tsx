@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 
 import App from 'containers/App';
 
@@ -11,19 +11,17 @@ import OrderConfirmPage from 'pages/OrderConfirmPage';
 import OrdersListPage from 'pages/OrdersListPage';
 
 const AppRouter = (): ReactElement => (
-  <BrowserRouter>
-    <Switch>
-      <Route path="/" component={LogInPage} exact />
-      <App>
-        <Route path="/registration" component={RegistrationPage} />
-        <Route path="/home" component={PizzaConstructorPage} />
-        <Route path="/order-checkout" component={OrderCheckoutPage} />
-        <Route path="/order-confirm/:status?" component={OrderConfirmPage} />
-        <Route path="/orders-history" component={OrdersListPage} />
-      </App>
-      <Redirect to="/" />
-    </Switch>
-  </BrowserRouter>
+  <Switch>
+    <Route path="/" component={LogInPage} exact />
+    <Route path="/registration" component={RegistrationPage} exact />
+    <App>
+      <Route path="/home" component={PizzaConstructorPage} exact />
+      <Route path="/order-checkout" component={OrderCheckoutPage} exact />
+      <Route path="/order-confirm/:status?" component={OrderConfirmPage} exact />
+      <Route path="/orders-history" component={OrdersListPage} exact />
+    </App>
+    <Redirect to="/" />
+  </Switch>
 );
 
 export default AppRouter;

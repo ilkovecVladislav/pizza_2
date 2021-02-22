@@ -1,45 +1,31 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import { ThemeProvider } from 'styled-components';
 
+import theme from 'theme';
 import RadioButtonGroupField from '.';
 
-const options = [
-  {
-    id: 'medium',
-    value: '30',
-    label: '30 см',
-  },
-  {
-    id: 'big',
-    value: '35',
-    label: '35 см',
-  },
-];
-
 describe('RadioButtonGroupField', () => {
-  it('renders RadioButtonGroupField', () => {
-    const { getByText, getByLabelText } = render(
-      <RadioButtonGroupField label="Size" name="size" options={options} />,
-    );
-    expect(getByText(/Size/i)).toBeTruthy();
-    expect(getByLabelText('30 см')).toBeTruthy();
-    expect(getByLabelText('35 см')).toBeTruthy();
-  });
-  it('input updates', () => {
-    const mockOnChange = jest.fn();
-    const { getByLabelText } = render(
-      <RadioButtonGroupField
-        label="Size"
-        name="size"
-        options={options}
-        value={null}
-        onChange={mockOnChange}
-      />,
+  it('renders correctly', () => {
+    const INPUT_NAME = 'size';
+    const LABEL = 'Размер пиццы';
+    const BASE_PIZZA_SIZE_LABEL = '30 см';
+    const BIG_PIZZA_SIZE_LABEL = '35 см';
+    const OPTIONS = {
+      '30': { label: BASE_PIZZA_SIZE_LABEL },
+      '35': { label: BIG_PIZZA_SIZE_LABEL },
+    };
+    render(
+      <ThemeProvider theme={theme}>
+        <RadioButtonGroupField name={INPUT_NAME} label={LABEL} options={OPTIONS} />
+      </ThemeProvider>,
     );
 
-    const radioButton = getByLabelText('35 см');
-
-    fireEvent.click(radioButton);
-    expect(mockOnChange).toHaveBeenCalled();
+    expect(screen.getByText(LABEL)).toBeInTheDocument();
+    expect(screen.getAllByRole('radio')).toHaveLength(2);
+    expect(screen.getByLabelText(BASE_PIZZA_SIZE_LABEL)).toBeInTheDocument();
+    expect(screen.getByLabelText(BASE_PIZZA_SIZE_LABEL)).toHaveAttribute('name', INPUT_NAME);
+    expect(screen.getByLabelText(BIG_PIZZA_SIZE_LABEL)).toBeInTheDocument();
+    expect(screen.getByLabelText(BIG_PIZZA_SIZE_LABEL)).toHaveAttribute('name', INPUT_NAME);
   });
 });

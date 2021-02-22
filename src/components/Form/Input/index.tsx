@@ -1,6 +1,6 @@
 import React, { forwardRef, ReactElement } from 'react';
 
-import { StyledInput, Error } from './Input.style';
+import { Container, StyledInput, Error } from './Input.style';
 
 type Props = {
   label?: string;
@@ -19,16 +19,17 @@ type Props = {
     | 'search'
     | undefined;
   autoComplete?: string;
+  value?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 const Input = forwardRef<HTMLInputElement, Props>(
   ({ label = '', type = 'text', name, error, ...rest }, ref): ReactElement => (
-    <StyledInput error={!!error}>
+    <Container>
       {label}
-      <input ref={ref} type={type} name={name} {...rest} />
+      <StyledInput ref={ref} type={type} name={name} error={!!error} {...rest} />
       {error && <Error>{error}</Error>}
-    </StyledInput>
+    </Container>
   ),
 );
 

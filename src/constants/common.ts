@@ -23,8 +23,8 @@ interface DoughOptions {
 }
 
 export type DoughKeys = keyof DoughOptions;
-
+export const THIN_DOUGH = 'thin';
 export const DOUGH = {
-  thin: { label: 'Тонкое', price: 0 },
+  [THIN_DOUGH]: { label: 'Тонкое', price: 0 },
   lush: { label: 'Пышное', price: 0 },
 };

@@ -11,8 +11,9 @@ export const Container = styled.div<{ isSelected: boolean }>`
   box-shadow: 0px 8px 16px rgba(75, 75, 124, 0.05);
   border-radius: 12px;
   flex: none;
-  border: 2px solid
-    ${({ isSelected, theme }) => (isSelected ? theme.colors.primary.main : 'transparent')};
+  border: 2px solid;
+  border-color: ${({ isSelected, theme }) =>
+    isSelected ? theme.colors.primary.main : 'transparent'};
   cursor: pointer;
 `;
 

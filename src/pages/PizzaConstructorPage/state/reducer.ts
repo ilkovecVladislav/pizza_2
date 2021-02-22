@@ -5,7 +5,7 @@ import { getIngredients } from 'services/ingredients';
 import type { PizzaIngredients } from './types';
 import type { FormValues } from '../types';
 
-type PizzaConstructorState = {
+export type PizzaConstructorState = {
   pizza: FormValues;
   ingredients: PizzaIngredients;
   isLoadingIngredients: boolean;

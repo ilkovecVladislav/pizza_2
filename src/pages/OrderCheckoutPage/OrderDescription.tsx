@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 
 import IngredientsList from 'components/IngredientsList';
 import { Container, Content, Title, Price } from './OrderDescription.style';
@@ -8,7 +8,7 @@ type Props = {
   price: number;
 };
 
-const OrderDescription = ({ price }: Props): JSX.Element => {
+const OrderDescription = ({ price }: Props): ReactElement => {
   const data = usePizzaData();
   const allIngredients = useIngredientsArray();
   const { cheese = [], vegetables = [], meat = [] } = data;

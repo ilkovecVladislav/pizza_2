@@ -30,8 +30,12 @@ const IngredientCheckbox = forwardRef<HTMLInputElement, Props>(
     };
 
     return (
-      <Container isSelected={isSelected} onClick={handleContainerClick}>
-        <Thumb src={`${process.env.REACT_APP_API_URL}/${option.thumbnail}`} alt={option.name} />
+      <Container
+        data-testid="checkbox-container"
+        isSelected={isSelected}
+        onClick={handleContainerClick}
+      >
+        <Thumb src={`${process.env.REACT_APP_API_URL}${option.thumbnail}`} alt={option.name} />
         <Title isSelected={isSelected}>{option.name}</Title>
         <Row>
           <Price>{option.price} ₽</Price>
