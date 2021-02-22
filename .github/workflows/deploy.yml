@@ -1,19 +1,16 @@
-# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-
-name: Node.js CI
+name: Deploy to Netlify
 
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
+      types: [closed]
 
 env:
   REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
 
 jobs:
   build:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     strategy:
@@ -21,17 +18,15 @@ jobs:
         node-version: [14.x]
 
     steps:
-      - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm install -g yarn
-      - name: yarn install, release and test
+      - name: yarn install, release
         run: |
           yarn install
           yarn release
-          yarn test
       - name: Create Sentry release
         uses: getsentry/action-release@v1
         env:
@@ -49,24 +44,3 @@ jobs:
         with:
           args: deploy --dir=build --prod
           secrets: '["NETLIFY_AUTH_TOKEN", "NETLIFY_SITE_ID", "REACT_APP_API_URL"]'
-
-  run_cypress:
-    name: Run Cypress
-    runs-on: ubuntu-16.04
-    timeout-minutes: 20
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Cypress Run
-        uses: cypress-io/github-action@v2
-        with:
-          start: yarn start
-          config-file: cypress.json
-          wait-on: 'http://localhost:3000'
-          wait-on-timeout: 300
-          browser: chrome
-          headless: true
-          record: false
-          parallel: false
-          secrets: '[ "REACT_APP_API_URL"]'

@@ -1,0 +1,12 @@
+[
+  {
+    "id": "d5fE_asz",
+    "ingredients": ["cucumber", "salami", "bacon"],
+    "sauces": ["mayo"],
+    "size": 30,
+    "dough": "thick",
+    "name": "Ivan Ivanov",
+    "card_number": "0000 0000 0000 0000",
+    "address": "Sesame Street"
+  }
+]
