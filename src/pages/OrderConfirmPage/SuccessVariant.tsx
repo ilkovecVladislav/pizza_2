@@ -1,40 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ReactElement } from 'react';
 import styled from 'styled-components';
 import last from 'lodash/last';
+import { useDispatch } from 'react-redux';
 
 import OrderCard from 'components/OrderCard';
 import successIcon from 'assets/icons/success.svg';
-import { getIngredients } from 'services/ingredients';
 import { getOrders } from 'services/orders';
 import type Order from 'services/types/Order';
-import type Ingredient from 'services/types/Ingredient';
+import { useIngredientsArray } from '../PizzaConstructorPage/state/selectors';
+import { resetPizza } from '../PizzaConstructorPage/state/reducer';
+import { Label, Description } from './OrderConfirm.style';
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  .success-text {
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 28px;
-    color: #1f1f33;
-    margin-bottom: 8px;
-  }
-
-  .success-description {
-    font-size: 16px;
-    line-height: 20px;
-    color: #4b4b7c;
-    margin-bottom: 32px;
-    text-align: center;
-  }
+  padding: 0 16px;
 `;
 
 const Success = styled.div`
-  width: 67px;
-  height: 67px;
-  background: #00a896;
+  width: 51px;
+  height: 51px;
+  background: ${({ theme }) => theme.colors.primary.main};
   border-radius: 99px;
   position: relative;
   margin-bottom: 24px;
@@ -53,9 +40,9 @@ const Success = styled.div`
   }
 `;
 
-const SuccessVariant = (): JSX.Element => {
+const SuccessVariant = (): ReactElement => {
   const [data, setData] = useState<Order[] | null>(null);
-  const [ingredients, setIngredients] = useState<Ingredient[]>([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     getOrders()
@@ -64,20 +51,19 @@ const SuccessVariant = (): JSX.Element => {
       })
       .catch((err) => console.log(err));
 
-    getIngredients()
-      .then((res) => {
-        setIngredients(res);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+    return () => {
+      dispatch(resetPizza());
+    };
+  }, [dispatch]);
 
   const order = last(data);
+  const ingredients = useIngredientsArray();
 
   return (
     <Container>
       <Success />
-      <h3 className="success-text">Спасибо за заказ!</h3>
-      <p className="success-description">Заказ успешно оплачен, ждите вашу пиццу уже через час</p>
+      <Label>Спасибо за заказ!</Label>
+      <Description>Заказ успешно оплачен, ждите вашу пиццу уже через час</Description>
       {order && (
         <OrderCard
           order={order}

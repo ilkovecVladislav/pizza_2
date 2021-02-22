@@ -1,53 +1,73 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { useHistory } from 'react-router-dom';
+import styled from 'styled-components';
 
 import { postOrder } from 'services/orders';
-import Header from './Header';
+import Header from 'components/Header';
 import OrderDescription from './OrderDescription';
 import Form from './Form';
-import useCalculatePizzaPrice from '../PizzaConstructorPage/priceCalcHooks';
-import { useIngredients, usePizzaData } from '../PizzaConstructorPage/state/selectors';
+import useCalculatePizzaPrice from 'utils/hooks/useCalculatePizzaPrice';
+import { useIngredientsArray, usePizzaData } from '../PizzaConstructorPage/state/selectors';
 
-const OrderCheckout = (): JSX.Element => {
+const Container = styled.div`
+  max-width: 400px;
+  margin: 0 auto;
+  background: ${({ theme }) => theme.colors.gray[100]};
+`;
+
+const OrderCheckout = (): ReactElement => {
   const history = useHistory();
-
   const pizzaData = usePizzaData();
 
   const {
     cheese: cheeseValue = [],
     meat: meatValue = [],
     vegetables: vegetablesValue = [],
-    sauce: sauceValue = '',
+    sauce,
+    dough,
+    size,
   } = pizzaData;
-  const { cheese = [], vegetables = [], sauces = [], meat = [] } = useIngredients();
 
-  const onSubmit = ({ card_number, address }: { card_number: string; address: string }) => {
-    const ingredients = [sauceValue, ...cheeseValue, ...meatValue, ...vegetablesValue];
+  const selectedIngredients = [...cheeseValue, ...meatValue, ...vegetablesValue];
 
+  const onSubmit = ({
+    card_number,
+    cardName,
+    address,
+  }: {
+    card_number: string;
+    address: string;
+    cardName: string;
+  }) => {
     return postOrder({
       card_number,
       address,
-      name: Math.random().toString(36).slice(2),
-      ingredients,
+      name: cardName,
+      ingredients: selectedIngredients,
+      sauces: sauce ? [sauce] : [],
+      dough,
+      size: +size,
     })
       .then(() => history.push('/order-confirm/success'))
       .catch(() => history.push('/order-confirm/error'));
   };
 
+  const ingredientsArray = useIngredientsArray();
+
   const price = useCalculatePizzaPrice({
-    selectedIngredients: pizzaData,
-    sauces,
-    meat,
-    cheese,
-    vegetables,
+    allIngredients: ingredientsArray,
+    size: size,
+    dough: dough,
+    saucesValue: sauce,
+    selectedIngredients,
   });
 
   return (
-    <div>
-      <Header />
+    <Container>
+      <Header title="Оформление заказа" link="/home" />
       <OrderDescription price={price} />
       <Form price={price} formSubmit={onSubmit} />
-    </div>
+    </Container>
   );
 };
 

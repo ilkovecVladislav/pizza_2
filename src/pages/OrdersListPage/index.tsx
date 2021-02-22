@@ -1,46 +1,36 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import styled from 'styled-components';
-import { useLocation, useHistory } from 'react-router-dom';
 
-import Content from './Content';
+import OrdersList from './OrdersList';
 
-const Wrapper = styled.div``;
+import Button from 'components/Button';
 
-const Button = styled.button`
-  display: block;
-  margin 15px auto;
-  border: unset;
-  background: #00a896;
-  border-radius: 16px;
-  font-weight: 800;
-  font-size: 16px;
-  line-height: 16px;
-  padding: 0 15px;
-  color: #ffffff;
-  height: 40px;
-  margin-bottom: 16px;
-  cursor: pointer;
+export const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 0 16px;
 `;
 
-const OrdersList = (): JSX.Element => {
+const OrdersListPage = (): ReactElement => {
   const { loginWithRedirect, isAuthenticated } = useAuth0();
-  const x = useLocation();
-  const y = useHistory();
 
-  console.log(x, y);
+  const handleAuthenticate = () => loginWithRedirect({ redirectUri: window.location.href });
 
   if (isAuthenticated) {
-    return <Content />;
+    return <OrdersList />;
   }
 
   return (
     <Wrapper>
-      <Button onClick={() => loginWithRedirect({ redirectUri: window.location.href })}>
-        Авторизоваться
-      </Button>
+      <Button text="Авторизоваться" onClick={handleAuthenticate} />
     </Wrapper>
   );
 };
 
-export default OrdersList;
+export default OrdersListPage;

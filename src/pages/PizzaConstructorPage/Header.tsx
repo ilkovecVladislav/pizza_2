@@ -1,23 +1,40 @@
-import React from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect, useRef, ReactElement } from 'react';
 
-import userIcon from 'assets/icons/user.svg';
 import logo from 'assets/images/logo.png';
+import { Container, ImageButton, PopUp, StyledLink } from './Header.style';
 
-const Container = styled.div`
-  height: 56px;
-  padding: 8px 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex: none;
-`;
+const Header = (): ReactElement => {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
-const Header = (): JSX.Element => (
-  <Container>
-    <img src={logo} alt="логотип" />
-    <img src={userIcon} alt="аватар" />
-  </Container>
-);
+  const handleOpenPopUp = () => setOpen(true);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      const target = event.target as HTMLElement;
+      if (ref.current && !ref.current.contains(target)) {
+        setOpen(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  return (
+    <Container ref={ref}>
+      <img src={logo} alt="логотип" />
+      <ImageButton type="button" onClick={handleOpenPopUp} />
+      {open ? (
+        <PopUp>
+          <StyledLink to="/orders-history">История заказов</StyledLink>
+        </PopUp>
+      ) : null}
+    </Container>
+  );
+};
 
 export default Header;
